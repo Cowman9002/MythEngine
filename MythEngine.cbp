@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="MythEngine" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/MythEngine" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="src" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/MythEngine" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="src" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="include" />
+		</Compiler>
+		<Linker>
+			<Add library="DragonEngine" />
+			<Add library="m3d" />
+			<Add library="assimp.dll" />
+			<Add library="glfw3" />
+			<Add library="gdi32" />
+			<Add library="opengl32" />
+			<Add directory="lib" />
+		</Linker>
+		<Unit filename="src/Renderer.cpp" />
+		<Unit filename="src/Renderer.h" />
+		<Unit filename="src/ResourceManager.cpp" />
+		<Unit filename="src/ResourceManager.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/main.cpp" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

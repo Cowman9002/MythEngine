@@ -1,0 +1,98 @@
+# depslib dependency file v1.0
+1599422344 source:c:\dev\cpp\mythengine\src\main.cpp
+	<DragonEngine/Dragon.h>
+	<m3d/Math1D.h>
+	<m3d/Mat3x3.h>
+	<m3d/Vec2.h>
+	"ResourceManager.h"
+	"Renderer.h"
+	<cmath>
+	<unordered_map>
+
+1599403649 c:\dev\cpp\mythengine\include\dragonengine\dragon.h
+	"Camera.h"
+	"Framebuffer.h"
+	"Input.h"
+	"Mesh.h"
+	"Renderer.h"
+	"Shader.h"
+	"ShadowMap.h"
+	"Texture.h"
+	"Window.h"
+
+1599402428 c:\dev\cpp\mythengine\include\dragonengine\camera.h
+	<m3d/vec3.h>
+	<m3d/quat.h>
+	<m3d/mat4x4.h>
+
+1599414903 c:\dev\cpp\mythengine\include\m3d\vec3.h
+
+1599414721 c:\dev\cpp\mythengine\include\m3d\quat.h
+
+1598791048 c:\dev\cpp\mythengine\include\m3d\mat4x4.h
+
+1599403816 c:\dev\cpp\mythengine\include\dragonengine\framebuffer.h
+	"DragonEngine/Texture.h"
+
+1599403731 c:\dev\cpp\mythengine\include\dragonengine\texture.h
+	<string>
+
+1599402428 c:\dev\cpp\mythengine\include\dragonengine\input.h
+	<array>
+
+1599420941 c:\dev\cpp\mythengine\include\dragonengine\mesh.h
+	<vector>
+	<string>
+
+1599402989 c:\dev\cpp\mythengine\include\dragonengine\renderer.h
+	"Mesh.h"
+	"Shader.h"
+	"Texture.h"
+	"Framebuffer.h"
+
+1599402428 c:\dev\cpp\mythengine\include\dragonengine\shader.h
+	<string>
+	<unordered_map>
+
+1599402428 c:\dev\cpp\mythengine\include\dragonengine\shadowmap.h
+	"Texture.h"
+	"Framebuffer.h"
+	<m3d/mat4x4.h>
+	<m3d/vec3.h>
+
+1599403868 c:\dev\cpp\mythengine\include\dragonengine\window.h
+	<string>
+	"Input.h"
+	"Renderer.h"
+
+1598707146 c:\dev\cpp\mythengine\include\m3d\math1d.h
+
+1598791008 c:\dev\cpp\mythengine\include\m3d\mat3x3.h
+
+1598798076 c:\dev\cpp\mythengine\include\m3d\vec2.h
+
+1599417087 source:c:\dev\cpp\mythengine\src\scenegraph.cpp
+	"SceneGraph.h"
+
+1599417050 c:\dev\cpp\mythengine\src\scenegraph.h
+	<vector>
+	<m3d/vec3.h>
+	<m3d/quat.h>
+	<m3d/mat4x4.h>
+
+1599422786 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
+	"ResourceManager.h"
+
+1599420964 c:\dev\cpp\mythengine\src\resourcemanager.h
+	<DragonEngine/Mesh.h>
+	<DragonEngine/Texture.h>
+	<DragonEngine/Shader.h>
+	<vector>
+
+1599422886 source:c:\dev\cpp\mythengine\src\renderer.cpp
+	"Renderer.h"
+	<DragonEngine/renderer.h>
+
+1599422890 c:\dev\cpp\mythengine\src\renderer.h
+	"ResourceManager.h"
+
