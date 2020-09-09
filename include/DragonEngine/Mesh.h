@@ -5,6 +5,7 @@
 
 namespace dgn
 {
+
     class Mesh
     {
         friend class Renderer;

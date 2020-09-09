@@ -43,12 +43,15 @@
 			<Add library="opengl32" />
 			<Add directory="lib" />
 		</Linker>
-		<Unit filename="src/Renderer.cpp" />
-		<Unit filename="src/Renderer.h" />
+		<Unit filename="src/Material.cpp" />
+		<Unit filename="src/Material.h" />
+		<Unit filename="src/RenderingEngine.cpp" />
+		<Unit filename="src/RenderingEngine.h" />
 		<Unit filename="src/ResourceManager.cpp" />
 		<Unit filename="src/ResourceManager.h">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/Transform.h" />
 		<Unit filename="src/main.cpp" />
 		<Extensions />
 	</Project>

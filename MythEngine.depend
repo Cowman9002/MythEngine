@@ -1,13 +1,16 @@
 # depslib dependency file v1.0
-1599422344 source:c:\dev\cpp\mythengine\src\main.cpp
+1599608151 source:c:\dev\cpp\mythengine\src\main.cpp
 	<DragonEngine/Dragon.h>
 	<m3d/Math1D.h>
 	<m3d/Mat3x3.h>
 	<m3d/Vec2.h>
 	"ResourceManager.h"
-	"Renderer.h"
+	"Transform.h"
+	"Material.h"
+	"RenderingEngine.h"
 	<cmath>
 	<unordered_map>
+	<vector>
 
 1599403649 c:\dev\cpp\mythengine\include\dragonengine\dragon.h
 	"Camera.h"
@@ -20,7 +23,7 @@
 	"Texture.h"
 	"Window.h"
 
-1599402428 c:\dev\cpp\mythengine\include\dragonengine\camera.h
+1599515125 c:\dev\cpp\mythengine\include\dragonengine\camera.h
 	<m3d/vec3.h>
 	<m3d/quat.h>
 	<m3d/mat4x4.h>
@@ -40,11 +43,11 @@
 1599402428 c:\dev\cpp\mythengine\include\dragonengine\input.h
 	<array>
 
-1599420941 c:\dev\cpp\mythengine\include\dragonengine\mesh.h
+1599515154 c:\dev\cpp\mythengine\include\dragonengine\mesh.h
 	<vector>
 	<string>
 
-1599402989 c:\dev\cpp\mythengine\include\dragonengine\renderer.h
+1599515353 c:\dev\cpp\mythengine\include\dragonengine\renderer.h
 	"Mesh.h"
 	"Shader.h"
 	"Texture.h"
@@ -80,19 +83,66 @@
 	<m3d/quat.h>
 	<m3d/mat4x4.h>
 
-1599422786 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
+1599605075 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
 	"ResourceManager.h"
 
-1599420964 c:\dev\cpp\mythengine\src\resourcemanager.h
+1599605015 c:\dev\cpp\mythengine\src\resourcemanager.h
 	<DragonEngine/Mesh.h>
 	<DragonEngine/Texture.h>
 	<DragonEngine/Shader.h>
 	<vector>
 
-1599422886 source:c:\dev\cpp\mythengine\src\renderer.cpp
+1599423795 source:c:\dev\cpp\mythengine\src\renderer.cpp
 	"Renderer.h"
 	<DragonEngine/renderer.h>
+	<DragonEngine/camera.h>
 
-1599422890 c:\dev\cpp\mythengine\src\renderer.h
+1599515651 c:\dev\cpp\mythengine\src\renderer.h
 	"ResourceManager.h"
+	"Material.h"
+
+1599517376 source:c:\dev\cpp\mythengine\src\shader.cpp
+	"Shader.h"
+	"ResourceManager.h"
+
+1599517514 c:\dev\cpp\mythengine\src\shader.h
+	<unordered_map>
+	<string>
+	<m3d/m3d.h>
+
+1599513907 c:\dev\cpp\mythengine\include\m3d\m3d.h
+	"math1D.h"
+	"vec2.h"
+	"vec3.h"
+	"vec4.h"
+	"quat.h"
+	"mat3x3.h"
+	"mat4x4.h"
+
+1598798176 c:\dev\cpp\mythengine\include\m3d\vec4.h
+
+1599607751 source:c:\dev\cpp\mythengine\src\material.cpp
+	"Material.h"
+	<DragonEngine/Renderer.h>
+	<DragonEngine/Camera.h>
+	"Transform.h"
+	"ResourceManager.h"
+
+1599607720 c:\dev\cpp\mythengine\src\material.h
+	<unordered_map>
+	<m3d/vec3.h>
+
+1599514009 c:\dev\cpp\mythengine\src\transform.h
+	<m3d/m3d.h>
+
+1599607781 source:c:\dev\cpp\mythengine\src\renderingengine.cpp
+	"RenderingEngine.h"
+	"ResourceManager.h"
+	<DragonEngine/Renderer.h>
+	<DragonEngine/Camera.h>
+
+1599607694 c:\dev\cpp\mythengine\src\renderingengine.h
+	<vector>
+	"Material.h"
+	"Transform.h"
 

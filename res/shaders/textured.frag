@@ -6,14 +6,15 @@ varying vec3 vNorm;
 varying vec2 vTexcoord;
 
 uniform sampler2D uTexture;
+uniform vec3 uColorMix = vec3(1.0);
 
-const vec3 L = vec3(1.0);
+const vec3 L = normalize(vec3(-1.0, 1.0, 1.0));
 
 void main()
 {
 	vec3 N = normalize(vNorm);
 
-	vec3 color = texture2D(uTexture, vTexcoord).rgb;
+	vec3 color = texture2D(uTexture, vTexcoord).rgb * uColorMix;
 	
 	color *= max(0.2, dot(N, L));
 
