@@ -14,9 +14,13 @@ void main()
 {
 	vec3 N = normalize(vNorm);
 
-	vec3 color = texture2D(uTexture, vTexcoord).rgb * uColorMix;
+	vec3 color = texture2D(uTexture, vTexcoord).rgb * uColorMix * 0.02;
 	
-	color *= max(0.2, dot(N, L));
+	color += color * max(0.0, dot(N, L)) * 20.0;
+
+	color = color / (color + vec3(1));
+
+	color = pow(color, vec3(1.0 / 2.2));
 
 	fragColor = vec4(color, 1.0);
 }

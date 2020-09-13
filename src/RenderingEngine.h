@@ -5,6 +5,8 @@
 #include "Material.h"
 #include "Transform.h"
 
+#include <DragonEngine/Camera.h>
+
 namespace dgn
 {
     class Renderer;
@@ -16,7 +18,7 @@ namespace myth
     struct RenderObject
     {
         myth::Transform *transform;
-        myth::Material *material;
+        unsigned material;
         unsigned model;
         unsigned sub_mesh;
     };
@@ -28,11 +30,14 @@ namespace myth
         std::vector<RenderObject> m_render_objects;
 
         dgn::Renderer *m_renderer;
-        dgn::Camera *m_camera;
         ResourceManager *m_resources;
 
+        dgn::Camera m_camera;
+
     public:
-        void init(dgn::Renderer *renderer, dgn::Camera *camera, ResourceManager *resources);
+        bool initialize(dgn::Renderer *renderer, ResourceManager *resources);
+
+        dgn::Camera *getCamera() { return &m_camera; };
 
         void add(const RenderObject& ro);
 

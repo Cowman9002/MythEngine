@@ -1,18 +1,9 @@
 # depslib dependency file v1.0
-1599608151 source:c:\dev\cpp\mythengine\src\main.cpp
-	<DragonEngine/Dragon.h>
-	<m3d/Math1D.h>
-	<m3d/Mat3x3.h>
-	<m3d/Vec2.h>
-	"ResourceManager.h"
-	"Transform.h"
-	"Material.h"
-	"RenderingEngine.h"
-	<cmath>
-	<unordered_map>
-	<vector>
+1600015029 source:c:\dev\cpp\mythengine\src\main.cpp
+	"CoreEngine.h"
+	"ScriptEngine.h"
 
-1599403649 c:\dev\cpp\mythengine\include\dragonengine\dragon.h
+1599741192 c:\dev\cpp\mythengine\include\dragonengine\dragon.h
 	"Camera.h"
 	"Framebuffer.h"
 	"Input.h"
@@ -22,6 +13,7 @@
 	"ShadowMap.h"
 	"Texture.h"
 	"Window.h"
+	"ErrorString.h"
 
 1599515125 c:\dev\cpp\mythengine\include\dragonengine\camera.h
 	<m3d/vec3.h>
@@ -83,14 +75,19 @@
 	<m3d/quat.h>
 	<m3d/mat4x4.h>
 
-1599605075 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
+1599915904 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
 	"ResourceManager.h"
+	<fstream>
+	<iostream>
+	<sstream>
 
-1599605015 c:\dev\cpp\mythengine\src\resourcemanager.h
+1599911782 c:\dev\cpp\mythengine\src\resourcemanager.h
 	<DragonEngine/Mesh.h>
 	<DragonEngine/Texture.h>
 	<DragonEngine/Shader.h>
+	"Material.h"
 	<vector>
+	<unordered_map>
 
 1599423795 source:c:\dev\cpp\mythengine\src\renderer.cpp
 	"Renderer.h"
@@ -121,28 +118,97 @@
 
 1598798176 c:\dev\cpp\mythengine\include\m3d\vec4.h
 
-1599607751 source:c:\dev\cpp\mythengine\src\material.cpp
+1599914559 source:c:\dev\cpp\mythengine\src\material.cpp
 	"Material.h"
 	<DragonEngine/Renderer.h>
 	<DragonEngine/Camera.h>
 	"Transform.h"
 	"ResourceManager.h"
 
-1599607720 c:\dev\cpp\mythengine\src\material.h
+1600022331 c:\dev\cpp\mythengine\src\material.h
 	<unordered_map>
 	<m3d/vec3.h>
 
-1599514009 c:\dev\cpp\mythengine\src\transform.h
+1600009033 c:\dev\cpp\mythengine\src\transform.h
 	<m3d/m3d.h>
 
-1599607781 source:c:\dev\cpp\mythengine\src\renderingengine.cpp
+1599854623 source:c:\dev\cpp\mythengine\src\renderingengine.cpp
 	"RenderingEngine.h"
 	"ResourceManager.h"
 	<DragonEngine/Renderer.h>
 	<DragonEngine/Camera.h>
 
-1599607694 c:\dev\cpp\mythengine\src\renderingengine.h
+1599853819 c:\dev\cpp\mythengine\src\renderingengine.h
 	<vector>
 	"Material.h"
 	"Transform.h"
+	<DragonEngine/Camera.h>
+
+1600023219 source:c:\dev\cpp\mythengine\src\coreengine.cpp
+	"CoreEngine.h"
+	<DragonEngine/ErrorString.h>
+	"components/MeshRenderer.h"
+	<cmath>
+
+1600006694 c:\dev\cpp\mythengine\src\coreengine.h
+	"ResourceManager.h"
+	"RenderingEngine.h"
+	"EntityComponent.h"
+	"ScriptEngine.h"
+	<DragonEngine/Window.h>
+
+1599741196 c:\dev\cpp\mythengine\include\dragonengine\errorstring.h
+
+1600008945 source:c:\dev\cpp\mythengine\src\entitycomponent.cpp
+	"EntityComponent.h"
+
+1600008934 c:\dev\cpp\mythengine\src\entitycomponent.h
+	<vector>
+	<unordered_map>
+	"Transform.h"
+
+1600008964 source:c:\dev\cpp\mythengine\src\components\meshrenderer.cpp
+	"MeshRenderer.h"
+	"ResourceManager.h"
+	"RenderingEngine.h"
+
+1599854142 c:\dev\cpp\mythengine\src\components\meshrenderer.h
+	"../EntityComponent.h"
+	<vector>
+
+1598539378 c:\dev\cpp\mythengine\include\lua\lua.hpp
+	"lua.h"
+	"lualib.h"
+	"lauxlib.h"
+
+1598539378 c:\dev\cpp\mythengine\include\lua\lua.h
+	<stdarg.h>
+	<stddef.h>
+	"luaconf.h"
+
+1598539378 c:\dev\cpp\mythengine\include\lua\luaconf.h
+	<limits.h>
+	<stddef.h>
+	<stdint.h>
+	<assert.h>
+
+1598539378 c:\dev\cpp\mythengine\include\lua\lualib.h
+	"lua.h"
+
+1598539378 c:\dev\cpp\mythengine\include\lua\lauxlib.h
+	<stddef.h>
+	<stdio.h>
+	"lua.h"
+
+1600023259 source:c:\dev\cpp\mythengine\src\scriptengine.cpp
+	"ScriptEngine.h"
+	<m3d/m3d.h>
+	<DragonEngine/Camera.h>
+
+1600023165 c:\dev\cpp\mythengine\src\scriptengine.h
+	<lua/lua.hpp>
+	<string>
+	<vector>
+	<DragonEngine/Window.h>
+	"RenderingEngine.h"
 

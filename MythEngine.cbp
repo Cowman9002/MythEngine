@@ -37,12 +37,17 @@
 		<Linker>
 			<Add library="DragonEngine" />
 			<Add library="m3d" />
+			<Add library="lua54" />
 			<Add library="assimp.dll" />
 			<Add library="glfw3" />
 			<Add library="gdi32" />
 			<Add library="opengl32" />
 			<Add directory="lib" />
 		</Linker>
+		<Unit filename="src/CoreEngine.cpp" />
+		<Unit filename="src/CoreEngine.h" />
+		<Unit filename="src/EntityComponent.cpp" />
+		<Unit filename="src/EntityComponent.h" />
 		<Unit filename="src/Material.cpp" />
 		<Unit filename="src/Material.h" />
 		<Unit filename="src/RenderingEngine.cpp" />
@@ -51,7 +56,11 @@
 		<Unit filename="src/ResourceManager.h">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/ScriptEngine.cpp" />
+		<Unit filename="src/ScriptEngine.h" />
 		<Unit filename="src/Transform.h" />
+		<Unit filename="src/components/MeshRenderer.cpp" />
+		<Unit filename="src/components/MeshRenderer.h" />
 		<Unit filename="src/main.cpp" />
 		<Extensions />
 	</Project>

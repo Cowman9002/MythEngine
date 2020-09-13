@@ -6,11 +6,26 @@
 
 namespace myth
 {
-    void RenderingEngine::init(dgn::Renderer *renderer, dgn::Camera *camera, ResourceManager *resources)
+    bool RenderingEngine::initialize(dgn::Renderer *renderer, ResourceManager *resources)
     {
         m_renderer = renderer;
-        m_camera = camera;
         m_resources = resources;
+
+        if(m_renderer == nullptr || m_resources == nullptr)
+        {
+            return false;
+        }
+
+        m_camera = dgn::Camera();
+
+        m_renderer->setClearColor(0.3f, 0.3f, 0.3f);
+        m_renderer->enableClearFlag(dgn::ClearFlag::color);
+        m_renderer->enableClearFlag(dgn::ClearFlag::depth);
+        m_renderer->enableFlag(dgn::RenderFlag::DepthTest);
+        m_renderer->enableFlag(dgn::RenderFlag::CullFace);
+        m_renderer->setClipMode(dgn::ClipMode::ZeroToOne);
+
+        return true;
     }
 
     void RenderingEngine::add(const RenderObject& ro)
@@ -20,12 +35,19 @@ namespace myth
 
     void RenderingEngine::drawAll()
     {
+        m_renderer->clear();
+
         for(RenderObject& r : m_render_objects)
         {
             dgn::Model *model = m_resources->getModel(r.model);
             if(model != nullptr)
             {
-                r.material->update(m_renderer, m_resources, m_camera, r.transform);
+                Material *material = m_resources->getMaterial(r.material);
+
+                if(material != nullptr)
+                {
+                    material->update(m_renderer, m_resources, m_camera, r.transform);
+                }
                 m_renderer->bindMesh(model->at(r.sub_mesh));
                 m_renderer->drawBoundMesh();
             }

@@ -34,6 +34,8 @@ namespace myth
     public:
         inline void setShader(const unsigned& shader) { m_shader = shader; }
 
+        inline unsigned getShader() { return m_shader; }
+
         void setUniform(const int& location, const m3d::vec3& value);
         void setUniform(const int& location, const int& value);
 
@@ -41,6 +43,6 @@ namespace myth
 
         void setTexture(const unsigned& unit, const unsigned& texture);
 
-        void update(dgn::Renderer *renderer, ResourceManager *resources, dgn::Camera *camera, Transform *transform);
+        void update(dgn::Renderer *renderer, ResourceManager *resources, const dgn::Camera& camera, Transform *transform);
     };
 }

@@ -1,0 +1,4 @@
+shader:textured_lit
+uniformc:uMVP;MVPMat
+uniformv3:uColorMix;1.0;1.0;1.0
+texture:ground_texture;0

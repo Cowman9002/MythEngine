@@ -35,15 +35,25 @@ namespace myth
         u_textures[unit] = texture;
     }
 
-    void Material::update(dgn::Renderer *renderer, ResourceManager *resources, dgn::Camera *camera, Transform *transform)
+    void Material::update(dgn::Renderer *renderer, ResourceManager *resources, const dgn::Camera& camera, Transform *transform)
     {
-        m3d::mat4x4 MV_mat = camera->getProjection() * camera->getView();
+        m3d::mat4x4 MV_mat = camera.getProjection() * camera.getView();
 
-        renderer->bindShader(*resources->getShader(m_shader));
+        dgn::Shader *shader = resources->getShader(m_shader);
+        if(shader == nullptr)
+        {
+            return;
+        }
+
+        renderer->bindShader(*shader);
 
         for(auto t : u_textures)
         {
-            renderer->bindTexture(*resources->getTexture(t.second), t.first);
+            dgn::Texture *tex = resources->getTexture(t.second);
+            if(tex != nullptr)
+            {
+                renderer->bindTexture(*tex, t.first);
+            }
         }
 
         for(auto m : m_uniforms)
