@@ -4,7 +4,7 @@ namespace myth
 {
     static unsigned s_entity_counter = 0;
 
-    Entity::Entity() : id(++s_entity_counter) {}
+    Entity::Entity() : m_id(++s_entity_counter) {}
 
     void Entity::addChild(Entity *child)
     {
@@ -29,6 +29,7 @@ namespace myth
         if(component != nullptr)
         {
             component->setEntity(this);
+            component->onAdd();
             m_components.push_back(component);
         }
     }
@@ -98,8 +99,28 @@ namespace myth
         }
     }
 
+    void Entity::dispose()
+    {
+        for(unsigned i = 0; i < m_components.size(); i++)
+        {
+            delete m_components[i];
+        }
+    }
+
+    Entity *SceneGraph::createEntity()
+    {
+        Entity *e = new Entity();
+        m_root.addChild(e);
+
+        return e;
+    }
+
     void SceneGraph::dispose()
     {
-
+        for(unsigned i = 0; i < m_root.numChildren(); i++)
+        {
+            m_root.getChild(i)->dispose();
+            delete(m_root.getChild(i));
+        }
     }
 }

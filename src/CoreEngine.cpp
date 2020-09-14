@@ -3,6 +3,7 @@
 #include <DragonEngine/ErrorString.h>
 
 #include "components/MeshRenderer.h"
+#include "components/ScriptComponent.h"
 
 #include <cmath>
 
@@ -25,10 +26,9 @@ namespace myth
         m_render.getCamera()->width = width;
         m_render.getCamera()->height = height;
 
-        if(!m_script_engine.initialize(&m_window, &m_render))
-        {
-            return false;
-        }
+        if(!m_script_engine.initialize(&m_window, &m_render)) return false;
+
+        if(!m_scene_loader.initialize(&m_scene_graph, &m_resources, &m_script_engine)) return false;
 
         m_initialized = true;
 
@@ -37,8 +37,8 @@ namespace myth
 
     void CoreEngine::terminate()
     {
-        m_script_engine.terminate();
         m_scene_graph.dispose();
+        m_script_engine.terminate();
         m_resources.dispose();
         m_window.terminate();
     }
@@ -141,8 +141,11 @@ namespace myth
         }
 
         // add scripts
-        m_script_engine.callScript("res/scripts/test.lua");
+        //TODO: figure out what to do with this
+        m_script_engine.callScript("res/scripts/player.lua");
+        m_script_engine.callScript("res/scripts/ball.lua");
 
+        m_scene_loader.loadScene("res/scenes/simple.scn");
 
         m_run = true;
         run();
@@ -156,30 +159,11 @@ namespace myth
 
         dgn::Camera *camera = m_render.getCamera();
 
-        MeshRenderer level_renderer = MeshRenderer(m_resources.getIndex("level"), m_resources.getModel(m_resources.getIndex("level"))->size());
-        level_renderer.addMaterial(m_resources.getIndex("brick_mat"));
-        level_renderer.addMaterial(m_resources.getIndex("plaster_mat"));
-        level_renderer.addMaterial(m_resources.getIndex("paint_wood_mat"));
-        level_renderer.addMaterial(m_resources.getIndex("wood_mat"));
-        level_renderer.addMaterial(m_resources.getIndex("ground_mat"));
-        level_renderer.addMaterial(m_resources.getIndex("concrete_mat"));
-        level_renderer.addMaterial(m_resources.getIndex("planks_mat"));
-        level_renderer.addMaterial(m_resources.getIndex("brick_mat"));
-
-        Entity level;
-        level.addComponent(&level_renderer);
-        m_scene_graph.addToScene(&level);
-
-        MeshRenderer ball_renderer = MeshRenderer(m_resources.getIndex("ball"), m_resources.getModel(m_resources.getIndex("ball"))->size());
-        ball_renderer.addMaterial(m_resources.getIndex("metal_mat"));
-
-        Entity ball = Entity();
-        ball.addComponent(&ball_renderer);
-        m_scene_graph.addToScene(&ball);
-
-        m_script_engine.createNewComponent(1, "Player");
+        camera->position = m3d::vec3(0.0f, 5.0f, 5.0f);
+        camera->rotation = m3d::quat(-30 * TO_RADS, m3d::vec3(1.0f, 0.0f, 0.0f));
 
         float delta = 1.0 / 60.0;
+        m_scene_graph.start();
 
         //////////////////////////////
         //            LOOP          //
@@ -187,25 +171,24 @@ namespace myth
 
         while(m_run)
         {
+            m_window.getInput().pollEvents();
             if(m_window.shouldClose())
             {
                 m_run = false;
+                break;
             }
-
-            m_window.getInput().pollEvents();
 
             //////////////////////////////////
             //          UPDATE              //
             //////////////////////////////////
 
-            m_script_engine.callParameterlessMethod(1, "Player", "update");
-
-            ball.transform.pos = m3d::vec3(sin(m_window.getFrameCount() / 30.0f) + 1.0f);
-
             Material *m = m_resources.getMaterial(m_resources.getIndex("brick_mat"));
 
             m->setUniform(m_resources.getShaderUniformLocation(m->getShader(), "uColorMix"),
                           m3d::vec3(std::max(1.0f, tanf(m_window.getFrameCount() / 30.0f))));
+
+            m_script_engine.setNamespaceValue("Myth", "frame", m_window.getFrameCount());
+            m_scene_graph.update();
 
             m_scene_graph.render(&m_render);
 

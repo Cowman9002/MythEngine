@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1600015029 source:c:\dev\cpp\mythengine\src\main.cpp
+1600121451 source:c:\dev\cpp\mythengine\src\main.cpp
 	"CoreEngine.h"
 	"ScriptEngine.h"
 
@@ -75,7 +75,7 @@
 	<m3d/quat.h>
 	<m3d/mat4x4.h>
 
-1599915904 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
+1600116607 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
 	"ResourceManager.h"
 	<fstream>
 	<iostream>
@@ -144,35 +144,37 @@
 	"Transform.h"
 	<DragonEngine/Camera.h>
 
-1600023219 source:c:\dev\cpp\mythengine\src\coreengine.cpp
+1600121381 source:c:\dev\cpp\mythengine\src\coreengine.cpp
 	"CoreEngine.h"
 	<DragonEngine/ErrorString.h>
 	"components/MeshRenderer.h"
+	"components/ScriptComponent.h"
 	<cmath>
 
-1600006694 c:\dev\cpp\mythengine\src\coreengine.h
+1600115821 c:\dev\cpp\mythengine\src\coreengine.h
 	"ResourceManager.h"
 	"RenderingEngine.h"
 	"EntityComponent.h"
 	"ScriptEngine.h"
+	"SceneLoader.h"
 	<DragonEngine/Window.h>
 
 1599741196 c:\dev\cpp\mythengine\include\dragonengine\errorstring.h
 
-1600008945 source:c:\dev\cpp\mythengine\src\entitycomponent.cpp
+1600120472 source:c:\dev\cpp\mythengine\src\entitycomponent.cpp
 	"EntityComponent.h"
 
-1600008934 c:\dev\cpp\mythengine\src\entitycomponent.h
+1600120537 c:\dev\cpp\mythengine\src\entitycomponent.h
 	<vector>
 	<unordered_map>
 	"Transform.h"
 
-1600008964 source:c:\dev\cpp\mythengine\src\components\meshrenderer.cpp
+1600119574 source:c:\dev\cpp\mythengine\src\components\meshrenderer.cpp
 	"MeshRenderer.h"
 	"ResourceManager.h"
 	"RenderingEngine.h"
 
-1599854142 c:\dev\cpp\mythengine\src\components\meshrenderer.h
+1600118297 c:\dev\cpp\mythengine\src\components\meshrenderer.h
 	"../EntityComponent.h"
 	<vector>
 
@@ -200,15 +202,38 @@
 	<stdio.h>
 	"lua.h"
 
-1600023259 source:c:\dev\cpp\mythengine\src\scriptengine.cpp
+1600121356 source:c:\dev\cpp\mythengine\src\scriptengine.cpp
 	"ScriptEngine.h"
 	<m3d/m3d.h>
 	<DragonEngine/Camera.h>
+	"Transform.h"
+	"EntityComponent.h"
 
-1600023165 c:\dev\cpp\mythengine\src\scriptengine.h
+1600114832 c:\dev\cpp\mythengine\src\scriptengine.h
 	<lua/lua.hpp>
 	<string>
 	<vector>
 	<DragonEngine/Window.h>
 	"RenderingEngine.h"
+
+1600115803 c:\dev\cpp\mythengine\src\components\scriptcomponent.h
+	"../EntityComponent.h"
+	"../ScriptEngine.h"
+	<string>
+
+1600117103 source:c:\dev\cpp\mythengine\src\components\scriptcomponent.cpp
+	"ScriptComponent.h"
+
+1600120407 c:\dev\cpp\mythengine\src\sceneloader.h
+	"EntityComponent.h"
+	"ResourceManager.h"
+	"ScriptEngine.h"
+
+1600120429 source:c:\dev\cpp\mythengine\src\sceneloader.cpp
+	"SceneLoader.h"
+	<fstream>
+	<iostream>
+	<sstream>
+	"components/MeshRenderer.h"
+	"components/ScriptComponent.h"
 

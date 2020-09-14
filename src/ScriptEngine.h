@@ -9,6 +9,7 @@
 
 namespace myth
 {
+    class Entity;
     class ScriptEngine
     {
     private:
@@ -16,15 +17,20 @@ namespace myth
         dgn::Window *m_window;
         RenderingEngine *m_render;
 
+        Entity *m_current_entity;
+
     public:
         bool initialize(dgn::Window *window, RenderingEngine *render);
         void terminate();
+
+        inline void setCurrentEntity(Entity* e) { m_current_entity = e; };
 
         void createNewComponent(const unsigned& entity_id, const std::string& comp_name);
 
         void callScript(const std::string& filename);
 
         void callParameterlessMethod(const unsigned& entity_id, const std::string& comp_name, const std::string& method);
+        void setNamespaceValue(const std::string& namesp, const std::string& valueName, const double& value);
     private:
 
         ////////////////////////////
@@ -63,6 +69,18 @@ namespace myth
         static int s_camera_setrot(lua_State *L);
         static int s_camera_getpos(lua_State *L);
         static int s_camera_getrot(lua_State *L);
+
+        //////////////////////////////
+        //          ENTITY          //
+        //////////////////////////////
+        static int s_entity_getself(lua_State *L);
+        static int s_entity_gettransform(lua_State *L);
+
+        //////////////////////////////////
+        //          TRANSFORM           //
+        //////////////////////////////////
+        static int s_transform_getpos(lua_State *L);
+        static int s_transform_setpos(lua_State *L);
 
         ///////////////////////////////
         //          INPUT            //

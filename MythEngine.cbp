@@ -56,11 +56,15 @@
 		<Unit filename="src/ResourceManager.h">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="src/SceneLoader.cpp" />
+		<Unit filename="src/SceneLoader.h" />
 		<Unit filename="src/ScriptEngine.cpp" />
 		<Unit filename="src/ScriptEngine.h" />
 		<Unit filename="src/Transform.h" />
 		<Unit filename="src/components/MeshRenderer.cpp" />
 		<Unit filename="src/components/MeshRenderer.h" />
+		<Unit filename="src/components/ScriptComponent.cpp" />
+		<Unit filename="src/components/ScriptComponent.h" />
 		<Unit filename="src/main.cpp" />
 		<Extensions />
 	</Project>

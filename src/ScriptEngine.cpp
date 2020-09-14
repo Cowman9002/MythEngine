@@ -3,6 +3,9 @@
 #include <m3d/m3d.h>
 #include <DragonEngine/Camera.h>
 
+#include "Transform.h"
+#include "EntityComponent.h"
+
 void print_error(lua_State* L)
  {
   // The error message is on top of the stack.
@@ -64,6 +67,20 @@ namespace myth
             {nullptr, nullptr}
         };
 
+        luaL_Reg entityObject[] =
+        {
+            {"getSelf", s_entity_getself},
+            {"getTransform", s_entity_gettransform},
+            {nullptr, nullptr}
+        };
+
+        luaL_Reg transformObject[] =
+        {
+            {"getPos", s_transform_getpos},
+            {"setPos", s_transform_setpos},
+            {nullptr, nullptr}
+        };
+
         luaL_Reg inputNamespace[] =
         {
             {"getKey", s_input_getkey},
@@ -111,9 +128,41 @@ namespace myth
 
         lua_newtable(L);
         {
+            luaL_newmetatable(L, "Myth.entity");
+
+            lua_pushstring(L, "__index");
+            lua_pushvalue(L, -2);  /* pushes the metatable */
+            lua_settable(L, -3);  /* metatable.__index = metatable */
+
+            luaL_setfuncs(L, entityObject, 0);
+        }
+        lua_setglobal(L, "entity");
+
+        lua_newtable(L);
+        {
+            luaL_newmetatable(L, "Myth.transform");
+
+            lua_pushstring(L, "__index");
+            lua_pushvalue(L, -2);  /* pushes the metatable */
+            lua_settable(L, -3);  /* metatable.__index = metatable */
+
+            luaL_setfuncs(L, transformObject, 0);
+        }
+        lua_setglobal(L, "transform");
+
+        lua_newtable(L);
+        {
             luaL_setfuncs(L, inputNamespace, 0);
         }
         lua_setglobal(L, "Input");
+
+        lua_newtable(L);
+        {
+            lua_pushstring(L, "frame");
+            lua_pushnumber(L, 0);
+            lua_settable(L, -3);
+        }
+        lua_setglobal(L, "Myth");
 
         s_bound = this;
 
@@ -201,8 +250,26 @@ namespace myth
         }
         else
         {
-            printf("Method %s no exist\n", method.c_str());
+            //printf("Method %s no exist\n", method.c_str());
         }
+        lua_pop(L, 1);
+    }
+
+    void ScriptEngine::setNamespaceValue(const std::string& namesp, const std::string& valueName, const double& value)
+    {
+        lua_getglobal(L, namesp.c_str());
+        if(!lua_istable(L, -1))
+        {
+            printf("Error:: namespace %s does not exist\n", namesp.c_str());
+            return;
+        }
+
+        lua_pushstring(L, valueName.c_str());
+        lua_pushnumber(L, value);
+        lua_settable(L, -3);
+        lua_pop(L, 1);
+
+        //printf("%i\n", lua_gettop(L));
     }
 
     ///////////////////////////////////////////
@@ -245,6 +312,8 @@ namespace myth
         {
             return luaL_error(L, "Error: expected 0, 1, or 3 arguments, got %I", lua_gettop(L));
         }
+
+        lua_pop(L, 3);
 
         size_t nbytes = sizeof(m3d::vec3);
         m3d::vec3 *a = (m3d::vec3*)lua_newuserdata(L, nbytes);
@@ -635,9 +704,13 @@ namespace myth
 
     int ScriptEngine::s_camera_get(lua_State *L)
     {
-        lua_pushlightuserdata(L, s_bound->m_render->getCamera());
+        size_t nbytes = sizeof(dgn::Camera*);
+        dgn::Camera **d = (dgn::Camera**)lua_newuserdata(L, nbytes);
+
         luaL_getmetatable(L, "Myth.camera");
         lua_setmetatable(L, -2);
+
+        *d = s_bound->m_render->getCamera();
 
         return 1;
     }
@@ -649,7 +722,7 @@ namespace myth
         void *ud = luaL_checkudata(L, 1, "Myth.camera");
         luaL_argcheck(L, ud != NULL, 1, "`camera' expected");
 
-        dgn::Camera *a = (dgn::Camera *)ud;
+        dgn::Camera *a = *(dgn::Camera**)ud;
 
         ud = luaL_checkudata(L, 2, "Myth.vec3");
         luaL_argcheck(L, ud != NULL, 1, "`vec3' expected");
@@ -668,7 +741,7 @@ namespace myth
         void *ud = luaL_checkudata(L, 1, "Myth.camera");
         luaL_argcheck(L, ud != NULL, 1, "`camera' expected");
 
-        dgn::Camera *a = (dgn::Camera *)ud;
+        dgn::Camera *a = *(dgn::Camera**)ud;
 
         ud = luaL_checkudata(L, 2, "Myth.quat");
         luaL_argcheck(L, ud != NULL, 1, "`quat' expected");
@@ -687,7 +760,7 @@ namespace myth
         void *ud = luaL_checkudata(L, 1, "Myth.camera");
         luaL_argcheck(L, ud != NULL, 1, "`camera' expected");
 
-        dgn::Camera *a = (dgn::Camera *)ud;
+        dgn::Camera *a = *(dgn::Camera**)ud;
 
         size_t nbytes = sizeof(m3d::vec3);
         m3d::vec3 *b = (m3d::vec3*)lua_newuserdata(L, nbytes);
@@ -707,7 +780,7 @@ namespace myth
         void *ud = luaL_checkudata(L, 1, "Myth.camera");
         luaL_argcheck(L, ud != NULL, 1, "`camera' expected");
 
-        dgn::Camera *a = (dgn::Camera *)ud;
+        dgn::Camera *a = *(dgn::Camera**)ud;
 
         size_t nbytes = sizeof(m3d::quat);
         m3d::quat *b = (m3d::quat*)lua_newuserdata(L, nbytes);
@@ -718,6 +791,90 @@ namespace myth
         *b = a->rotation;
 
         return 1;
+    }
+
+    //////////////////////////////////
+    //          ENTITY              //
+    //////////////////////////////////
+    int ScriptEngine::s_entity_getself(lua_State *L)
+    {
+        if(!lua_argcount(L, 0)) return 0;
+
+        if(s_bound->m_current_entity == nullptr)
+        {
+            return luaL_error(L, "There is no entity currently bound!");
+        }
+
+        size_t nbytes = sizeof(Entity*);
+        Entity **b = (Entity**)lua_newuserdata(L, nbytes);
+        luaL_getmetatable(L, "Myth.entity");
+        lua_setmetatable(L, -2);
+
+        *b = s_bound->m_current_entity;
+
+        return 1;
+    }
+
+    int ScriptEngine::s_entity_gettransform(lua_State *L)
+    {
+        if(!lua_argcount(L, 1)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.entity");
+        luaL_argcheck(L, ud != NULL, 1, "`entity' expected");
+
+        Entity *a = *(Entity**)ud;
+
+        size_t nbytes = sizeof(Transform*);
+        Transform **b = (Transform**)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.transform");
+        lua_setmetatable(L, -2);
+
+        *b = &a->transform;
+
+        return 1;
+    }
+
+    //////////////////////////////////
+    //          TRANSFORM           //
+    //////////////////////////////////
+    int ScriptEngine::s_transform_getpos(lua_State *L)
+    {
+        if(!lua_argcount(L, 1)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.transform");
+        luaL_argcheck(L, ud != NULL, 1, "`transform' expected");
+
+        Transform *a = *(Transform**)ud;
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *b = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *b = a->pos;
+
+        return 1;
+    }
+
+    int ScriptEngine::s_transform_setpos(lua_State *L)
+    {
+        if(!lua_argcount(L, 2)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.transform");
+        luaL_argcheck(L, ud != NULL, 1, "`transform' expected");
+
+        Transform *a = *(Transform**)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 2, "`vec3' expected");
+
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        a->pos = *b;
+
+        return 0;
     }
 
     ///////////////////////////////

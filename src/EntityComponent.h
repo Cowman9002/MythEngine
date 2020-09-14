@@ -26,11 +26,14 @@ namespace myth
         Component(ComponentType type) : m_type(type), m_entity(nullptr) {};
     public:
 
+        virtual ~Component() {};
+
         inline ComponentType getType() { return m_type; };
 
         inline void setEntity(Entity *entity) { m_entity = entity; };
         inline Entity *getEntity() { return m_entity; };
 
+        virtual void onAdd() {};
         virtual void start() {};
         virtual void update() {};
         virtual void render(RenderingEngine *render) {};
@@ -43,12 +46,19 @@ namespace myth
     private:
         std::vector<Entity*> m_children;
         std::vector<Component*> m_components;
+
+        unsigned m_id;
+
     public:
         Transform transform;
-        const unsigned id;
+        std::string name;
 
         Entity();
         //Entity(const Entity& e) = delete;
+
+        inline unsigned getId() { return m_id; };
+
+        inline unsigned numChildren() { return m_children.size(); };
 
         void addChild(Entity *child);
         Entity *getChild(const unsigned n);
@@ -60,6 +70,8 @@ namespace myth
         void update();
         void render(RenderingEngine *render);
         void fixedUpdate();
+
+        void dispose();
     };
 
     class SceneGraph
@@ -67,7 +79,7 @@ namespace myth
     private:
         Entity m_root;
     public:
-        inline void addToScene(Entity *entity) { m_root.addChild(entity); };
+        Entity *createEntity();
 
         inline void start() { m_root.start(); };
         inline void update() { m_root.update(); };

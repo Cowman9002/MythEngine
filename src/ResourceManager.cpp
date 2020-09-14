@@ -70,9 +70,9 @@ namespace myth
 
         while(std::getline(file, line))
         {
-            unsigned collon = line.find(":");
-            std::string fun = line.substr(0, collon);
-            std::string l_data = line.substr(collon + 1);
+            unsigned colon = line.find(":");
+            std::string fun = line.substr(0, colon);
+            std::string l_data = line.substr(colon + 1);
 
             std::vector<std::string> data_split;
 

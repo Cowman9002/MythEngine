@@ -17,7 +17,7 @@ namespace myth
     {
         myth::RenderObject ro;
 
-        for(unsigned i = 0; i < m_num_sub_meshes; i++)
+        for(unsigned i = m_start_index; i < m_num_sub_meshes; i++)
         {
             ro.transform = &getEntity()->transform;
             ro.model = m_model;

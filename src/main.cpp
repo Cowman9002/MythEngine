@@ -5,13 +5,9 @@
 
 #include "ScriptEngine.h"
 
-//TODO: scripting
-//TODO: transform integration
-//TODO: gameobject integration
-
-//TODO: milestone, have camera track the ball thats currently moving
-
-// https://www.lua.org/manual/5.2/manual.html#4
+//TODO: continue removing stuff from C++ code
+//TODO: clean-up scene loading
+//TODO: material control in scripts
 
 int main(int argc, char *argv[])
 {
