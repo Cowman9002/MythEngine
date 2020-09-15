@@ -6,6 +6,7 @@
 
 #include <DragonEngine/Window.h>
 #include "RenderingEngine.h"
+#include "ResourceManager.h"
 
 namespace myth
 {
@@ -16,11 +17,12 @@ namespace myth
         lua_State *L;
         dgn::Window *m_window;
         RenderingEngine *m_render;
+        ResourceManager *m_resources;
 
         Entity *m_current_entity;
 
     public:
-        bool initialize(dgn::Window *window, RenderingEngine *render);
+        bool initialize(dgn::Window *window, RenderingEngine *render, ResourceManager *resources);
         void terminate();
 
         inline void setCurrentEntity(Entity* e) { m_current_entity = e; };
@@ -48,6 +50,16 @@ namespace myth
         static int s_vec3_mul(lua_State *L);
         static int s_vec3_div(lua_State *L);
         static int s_vec3_down(lua_State *L);
+        static int s_vec3_up(lua_State *L);
+        static int s_vec3_left(lua_State *L);
+        static int s_vec3_right(lua_State *L);
+        static int s_vec3_forward(lua_State *L);
+        static int s_vec3_back(lua_State *L);
+        static int s_vec3_normalized(lua_State *L);
+        static int s_vec3_lerp(lua_State *L);
+        static int s_vec3_slerp(lua_State *L);
+        static int s_vec3_distancesqr(lua_State *L);
+        static int s_vec3_distance(lua_State *L);
 
         ///////////////////////////////////
         //          QUATERNION           //
@@ -57,8 +69,14 @@ namespace myth
         static int s_quat_getright(lua_State *L);
         static int s_quat_getup(lua_State *L);
         static int s_quat_getforward(lua_State *L);
+        static int s_quat_getleft(lua_State *L);
+        static int s_quat_getdown(lua_State *L);
+        static int s_quat_getback(lua_State *L);
         static int s_quat_rotate(lua_State *L);
         static int s_quat_mul(lua_State *L);
+        static int s_quat_face(lua_State *L);
+        static int s_quat_lookat(lua_State *L);
+        static int s_quat_slerp(lua_State *L);
 
         /////////////////////////////////
         //            CAMERA           //
@@ -81,6 +99,15 @@ namespace myth
         //////////////////////////////////
         static int s_transform_getpos(lua_State *L);
         static int s_transform_setpos(lua_State *L);
+        static int s_transform_getrot(lua_State *L);
+        static int s_transform_setrot(lua_State *L);
+
+        ///////////////////////////////
+        //          MATERIAL         //
+        ///////////////////////////////
+
+        static int s_material_get(lua_State *L);
+        static int s_material_setuniformv3(lua_State *L);
 
         ///////////////////////////////
         //          INPUT            //

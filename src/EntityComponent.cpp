@@ -6,12 +6,15 @@ namespace myth
 
     Entity::Entity() : m_id(++s_entity_counter) {}
 
-    void Entity::addChild(Entity *child)
+    Entity *Entity::createChild()
     {
+        Entity *child = new Entity();
         if(child)
         {
             m_children.push_back(child);
         }
+
+        return child;
     }
 
     Entity *Entity::getChild(const unsigned n)
@@ -105,22 +108,11 @@ namespace myth
         {
             delete m_components[i];
         }
-    }
 
-    Entity *SceneGraph::createEntity()
-    {
-        Entity *e = new Entity();
-        m_root.addChild(e);
-
-        return e;
-    }
-
-    void SceneGraph::dispose()
-    {
-        for(unsigned i = 0; i < m_root.numChildren(); i++)
+        for(unsigned i = 0; i < m_children.size(); i++)
         {
-            m_root.getChild(i)->dispose();
-            delete(m_root.getChild(i));
+            m_children[i]->dispose();
+            delete m_children[i];
         }
     }
 }

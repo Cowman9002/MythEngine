@@ -8,6 +8,8 @@
 
 #include <DragonEngine/Window.h>
 
+//TODO: collision
+
 namespace myth
 {
     class CoreEngine

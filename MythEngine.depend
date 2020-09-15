@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1600121451 source:c:\dev\cpp\mythengine\src\main.cpp
+1600174755 source:c:\dev\cpp\mythengine\src\main.cpp
 	"CoreEngine.h"
 	"ScriptEngine.h"
 
@@ -15,16 +15,16 @@
 	"Window.h"
 	"ErrorString.h"
 
-1599515125 c:\dev\cpp\mythengine\include\dragonengine\camera.h
+1600203106 c:\dev\cpp\mythengine\include\dragonengine\camera.h
 	<m3d/vec3.h>
 	<m3d/quat.h>
 	<m3d/mat4x4.h>
 
 1599414903 c:\dev\cpp\mythengine\include\m3d\vec3.h
 
-1599414721 c:\dev\cpp\mythengine\include\m3d\quat.h
+1600206527 c:\dev\cpp\mythengine\include\m3d\quat.h
 
-1598791048 c:\dev\cpp\mythengine\include\m3d\mat4x4.h
+1600184415 c:\dev\cpp\mythengine\include\m3d\mat4x4.h
 
 1599403816 c:\dev\cpp\mythengine\include\dragonengine\framebuffer.h
 	"DragonEngine/Texture.h"
@@ -60,7 +60,7 @@
 	"Input.h"
 	"Renderer.h"
 
-1598707146 c:\dev\cpp\mythengine\include\m3d\math1d.h
+1600198062 c:\dev\cpp\mythengine\include\m3d\math1d.h
 
 1598791008 c:\dev\cpp\mythengine\include\m3d\mat3x3.h
 
@@ -107,7 +107,7 @@
 	<string>
 	<m3d/m3d.h>
 
-1599513907 c:\dev\cpp\mythengine\include\m3d\m3d.h
+1600182898 c:\dev\cpp\mythengine\include\m3d\m3d.h
 	"math1D.h"
 	"vec2.h"
 	"vec3.h"
@@ -118,7 +118,7 @@
 
 1598798176 c:\dev\cpp\mythengine\include\m3d\vec4.h
 
-1599914559 source:c:\dev\cpp\mythengine\src\material.cpp
+1600201118 source:c:\dev\cpp\mythengine\src\material.cpp
 	"Material.h"
 	<DragonEngine/Renderer.h>
 	<DragonEngine/Camera.h>
@@ -129,7 +129,7 @@
 	<unordered_map>
 	<m3d/vec3.h>
 
-1600009033 c:\dev\cpp\mythengine\src\transform.h
+1600202137 c:\dev\cpp\mythengine\src\transform.h
 	<m3d/m3d.h>
 
 1599854623 source:c:\dev\cpp\mythengine\src\renderingengine.cpp
@@ -144,14 +144,14 @@
 	"Transform.h"
 	<DragonEngine/Camera.h>
 
-1600121381 source:c:\dev\cpp\mythengine\src\coreengine.cpp
+1600206766 source:c:\dev\cpp\mythengine\src\coreengine.cpp
 	"CoreEngine.h"
 	<DragonEngine/ErrorString.h>
 	"components/MeshRenderer.h"
 	"components/ScriptComponent.h"
 	<cmath>
 
-1600115821 c:\dev\cpp\mythengine\src\coreengine.h
+1600206817 c:\dev\cpp\mythengine\src\coreengine.h
 	"ResourceManager.h"
 	"RenderingEngine.h"
 	"EntityComponent.h"
@@ -161,10 +161,10 @@
 
 1599741196 c:\dev\cpp\mythengine\include\dragonengine\errorstring.h
 
-1600120472 source:c:\dev\cpp\mythengine\src\entitycomponent.cpp
+1600168222 source:c:\dev\cpp\mythengine\src\entitycomponent.cpp
 	"EntityComponent.h"
 
-1600120537 c:\dev\cpp\mythengine\src\entitycomponent.h
+1600168190 c:\dev\cpp\mythengine\src\entitycomponent.h
 	<vector>
 	<unordered_map>
 	"Transform.h"
@@ -202,19 +202,20 @@
 	<stdio.h>
 	"lua.h"
 
-1600121356 source:c:\dev\cpp\mythengine\src\scriptengine.cpp
+1600206707 source:c:\dev\cpp\mythengine\src\scriptengine.cpp
 	"ScriptEngine.h"
 	<m3d/m3d.h>
 	<DragonEngine/Camera.h>
 	"Transform.h"
 	"EntityComponent.h"
 
-1600114832 c:\dev\cpp\mythengine\src\scriptengine.h
+1600206689 c:\dev\cpp\mythengine\src\scriptengine.h
 	<lua/lua.hpp>
 	<string>
 	<vector>
 	<DragonEngine/Window.h>
 	"RenderingEngine.h"
+	"ResourceManager.h"
 
 1600115803 c:\dev\cpp\mythengine\src\components\scriptcomponent.h
 	"../EntityComponent.h"
@@ -224,12 +225,13 @@
 1600117103 source:c:\dev\cpp\mythengine\src\components\scriptcomponent.cpp
 	"ScriptComponent.h"
 
-1600120407 c:\dev\cpp\mythengine\src\sceneloader.h
+1600172508 c:\dev\cpp\mythengine\src\sceneloader.h
 	"EntityComponent.h"
 	"ResourceManager.h"
 	"ScriptEngine.h"
+	"RenderingEngine.h"
 
-1600120429 source:c:\dev\cpp\mythengine\src\sceneloader.cpp
+1600203221 source:c:\dev\cpp\mythengine\src\sceneloader.cpp
 	"SceneLoader.h"
 	<fstream>
 	<iostream>

@@ -3,6 +3,7 @@
 namespace m3d
 {
     class vec3;
+    class mat4x4;
     class quat
     {
     public:
@@ -15,14 +16,18 @@ namespace m3d
         static float angle(const quat& a, const quat& b);
         static quat angleVec3(const vec3& a, const vec3& b, const vec3& up);
         static quat conjugate(const quat& v);
+        static float dot(const quat& a, const quat& b);
         static vec3 euler(const quat& v);
         static quat face(const vec3& dir, const vec3& up);
         static float length(const quat& v);
         static float lengthSqr(const quat& v);
         static quat lerp(const quat& a, const quat& b, const float& t);
+        static quat lookat(const vec3& from, const vec3& target, const vec3& up);
         static quat normalized(const quat& v);
         static vec3 rotateVec3(const quat& a, const vec3& b);
         static quat slerp(const quat& a, const quat& b, const float& t);
+
+        static quat fromMat4x4(const mat4x4& mat);
 
         static quat add(const quat& a, const quat& b);
         static quat sub(const quat& a, const quat& b);

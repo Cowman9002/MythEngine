@@ -60,7 +60,7 @@ namespace myth
 
         inline unsigned numChildren() { return m_children.size(); };
 
-        void addChild(Entity *child);
+        Entity *createChild();
         Entity *getChild(const unsigned n);
 
         void addComponent(Component *component);
@@ -79,13 +79,13 @@ namespace myth
     private:
         Entity m_root;
     public:
-        Entity *createEntity();
+        inline Entity *createEntity() { return m_root.createChild(); };
 
         inline void start() { m_root.start(); };
         inline void update() { m_root.update(); };
         inline void render(RenderingEngine *render) { m_root.render(render); };
         inline void fixedUpdate() { m_root.fixedUpdate(); };
 
-        void dispose();
+        inline void dispose() { m_root.dispose(); };
     };
 }

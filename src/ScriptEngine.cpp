@@ -19,12 +19,15 @@ namespace myth
 {
     static ScriptEngine *s_bound;
 
-    bool ScriptEngine::initialize(dgn::Window *window, RenderingEngine* render)
+    void setInputNamespace(lua_State *L, luaL_Reg* funcs);
+
+    bool ScriptEngine::initialize(dgn::Window *window, RenderingEngine* render, ResourceManager *resources)
     {
-        if(!window || !render) return false;
+        if(!window || !render || !resources) return false;
 
         m_window = window;
         m_render = render;
+        m_resources = resources;
 
         L = luaL_newstate();
         luaL_openlibs(L);
@@ -43,6 +46,16 @@ namespace myth
             {"mul", s_vec3_mul},
             {"div", s_vec3_div},
             {"down", s_vec3_down},
+            {"up", s_vec3_up},
+            {"right", s_vec3_right},
+            {"left", s_vec3_left},
+            {"forward", s_vec3_forward},
+            {"back", s_vec3_back},
+            {"normalized", s_vec3_normalized},
+            {"lerp", s_vec3_lerp},
+            {"slerp", s_vec3_slerp},
+            {"distSqr", s_vec3_distancesqr},
+            {"dist", s_vec3_distance},
             {nullptr, nullptr}
         };
 
@@ -52,8 +65,14 @@ namespace myth
             {"getRight", s_quat_getright},
             {"getUp", s_quat_getup},
             {"getForward", s_quat_getforward},
+            {"getLeft", s_quat_getleft},
+            {"getDown", s_quat_getdown},
+            {"getBack", s_quat_getback},
             {"rotate", s_quat_rotate},
             {"mul", s_quat_mul},
+            {"face", s_quat_face},
+            {"lookat", s_quat_lookat},
+            {"slerp", s_quat_slerp},
             {nullptr, nullptr}
         };
 
@@ -78,6 +97,15 @@ namespace myth
         {
             {"getPos", s_transform_getpos},
             {"setPos", s_transform_setpos},
+            {"getRot", s_transform_getrot},
+            {"setRot", s_transform_setrot},
+            {nullptr, nullptr}
+        };
+
+        luaL_Reg materialObject[] =
+        {
+            {"get", s_material_get},
+            {"uniformv3", s_material_setuniformv3},
             {nullptr, nullptr}
         };
 
@@ -124,7 +152,7 @@ namespace myth
 
             luaL_setfuncs(L, cameraObject, 0);
         }
-        lua_setglobal(L, "camera");
+        lua_setglobal(L, "Camera");
 
         lua_newtable(L);
         {
@@ -136,7 +164,7 @@ namespace myth
 
             luaL_setfuncs(L, entityObject, 0);
         }
-        lua_setglobal(L, "entity");
+        lua_setglobal(L, "Entity");
 
         lua_newtable(L);
         {
@@ -148,13 +176,21 @@ namespace myth
 
             luaL_setfuncs(L, transformObject, 0);
         }
-        lua_setglobal(L, "transform");
+        lua_setglobal(L, "Transform");
 
         lua_newtable(L);
         {
-            luaL_setfuncs(L, inputNamespace, 0);
+            luaL_newmetatable(L, "Myth.material");
+
+            lua_pushstring(L, "__index");
+            lua_pushvalue(L, -2);  /* pushes the metatable */
+            lua_settable(L, -3);  /* metatable.__index = metatable */
+
+            luaL_setfuncs(L, materialObject, 0);
         }
-        lua_setglobal(L, "Input");
+        lua_setglobal(L, "Material");
+
+        setInputNamespace(L, inputNamespace);
 
         lua_newtable(L);
         {
@@ -171,6 +207,7 @@ namespace myth
 
     void ScriptEngine::terminate()
     {
+        lua_settop(L, 0);
         lua_close(L);
     }
 
@@ -202,7 +239,7 @@ namespace myth
 
         const char *instance = (name + std::to_string(entity_id)).c_str();
 
-        printf("%s created\n", instance);
+        //printf("%s created\n", instance);
 
         lua_setglobal(L, instance);
     }
@@ -272,6 +309,151 @@ namespace myth
         //printf("%i\n", lua_gettop(L));
     }
 
+    void setInputNamespace(lua_State *L, luaL_Reg* funcs)
+    {
+        lua_newtable(L);
+        {
+            luaL_setfuncs(L, funcs, 0);
+
+            lua_pushstring(L, "AxisLeftX");
+            lua_pushnumber(L, (unsigned)dgn::GamepadAxis::LeftX);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "AxisLeftY");
+            lua_pushnumber(L, (unsigned)dgn::GamepadAxis::LeftY);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "AxisRightX");
+            lua_pushnumber(L, (unsigned)dgn::GamepadAxis::RightX);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "AxisRightY");
+            lua_pushnumber(L, (unsigned)dgn::GamepadAxis::RightY);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyA");
+            lua_pushnumber(L, (unsigned)dgn::Key::A);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyB");
+            lua_pushnumber(L, (unsigned)dgn::Key::B);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyC");
+            lua_pushnumber(L, (unsigned)dgn::Key::C);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyD");
+            lua_pushnumber(L, (unsigned)dgn::Key::D);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyE");
+            lua_pushnumber(L, (unsigned)dgn::Key::E);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyF");
+            lua_pushnumber(L, (unsigned)dgn::Key::F);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyG");
+            lua_pushnumber(L, (unsigned)dgn::Key::G);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyH");
+            lua_pushnumber(L, (unsigned)dgn::Key::H);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyI");
+            lua_pushnumber(L, (unsigned)dgn::Key::I);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyJ");
+            lua_pushnumber(L, (unsigned)dgn::Key::J);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyK");
+            lua_pushnumber(L, (unsigned)dgn::Key::K);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyL");
+            lua_pushnumber(L, (unsigned)dgn::Key::L);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyM");
+            lua_pushnumber(L, (unsigned)dgn::Key::M);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyN");
+            lua_pushnumber(L, (unsigned)dgn::Key::N);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyO");
+            lua_pushnumber(L, (unsigned)dgn::Key::O);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyP");
+            lua_pushnumber(L, (unsigned)dgn::Key::P);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyQ");
+            lua_pushnumber(L, (unsigned)dgn::Key::Q);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyR");
+            lua_pushnumber(L, (unsigned)dgn::Key::R);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyS");
+            lua_pushnumber(L, (unsigned)dgn::Key::S);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyT");
+            lua_pushnumber(L, (unsigned)dgn::Key::T);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyU");
+            lua_pushnumber(L, (unsigned)dgn::Key::U);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyV");
+            lua_pushnumber(L, (unsigned)dgn::Key::V);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyW");
+            lua_pushnumber(L, (unsigned)dgn::Key::W);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyX");
+            lua_pushnumber(L, (unsigned)dgn::Key::X);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyY");
+            lua_pushnumber(L, (unsigned)dgn::Key::Y);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyZ");
+            lua_pushnumber(L, (unsigned)dgn::Key::Z);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyUp");
+            lua_pushnumber(L, (unsigned)dgn::Key::Up);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyDown");
+            lua_pushnumber(L, (unsigned)dgn::Key::Down);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyLeft");
+            lua_pushnumber(L, (unsigned)dgn::Key::Left);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "KeyRight");
+            lua_pushnumber(L, (unsigned)dgn::Key::Right);
+            lua_settable(L, -3);
+        }
+        lua_setglobal(L, "Input");
+    }
+
     ///////////////////////////////////////////
     //            SCRIPT FUNCTIONS           //
     ///////////////////////////////////////////
@@ -312,8 +494,6 @@ namespace myth
         {
             return luaL_error(L, "Error: expected 0, 1, or 3 arguments, got %I", lua_gettop(L));
         }
-
-        lua_pop(L, 3);
 
         size_t nbytes = sizeof(m3d::vec3);
         m3d::vec3 *a = (m3d::vec3*)lua_newuserdata(L, nbytes);
@@ -557,6 +737,195 @@ namespace myth
         return 1;
     }
 
+    int ScriptEngine::s_vec3_up(lua_State *L)
+    {
+        if(!lua_argcount(L, 0)) return 0;
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *a = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *a = m3d::vec3::up();
+
+        return 1;
+    }
+
+    int ScriptEngine::s_vec3_left(lua_State *L)
+    {
+        if(!lua_argcount(L, 0)) return 0;
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *a = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *a = m3d::vec3::left();
+
+        return 1;
+    }
+
+    int ScriptEngine::s_vec3_right(lua_State *L)
+    {
+        if(!lua_argcount(L, 0)) return 0;
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *a = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *a = m3d::vec3::right();
+
+        return 1;
+    }
+
+    int ScriptEngine::s_vec3_forward(lua_State *L)
+    {
+        if(!lua_argcount(L, 0)) return 0;
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *a = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *a = m3d::vec3::forwards();
+
+        return 1;
+    }
+
+    int ScriptEngine::s_vec3_back(lua_State *L)
+    {
+        if(!lua_argcount(L, 0)) return 0;
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *a = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *a = m3d::vec3::back();
+
+        return 1;
+    }
+
+    int ScriptEngine::s_vec3_normalized(lua_State *L)
+    {
+        if(!lua_argcount(L, 1)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 1, "`vec3' expected");
+        m3d::vec3 *a = (m3d::vec3 *)ud;
+
+        m3d::vec3 c = m3d::vec3::normalized(*a);
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *d = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        d->x = c.x;
+        d->y = c.y;
+        d->z = c.z;
+
+        return 1;
+    }
+
+    int ScriptEngine::s_vec3_lerp(lua_State *L)
+    {
+        if(!lua_argcount(L, 3)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 1, "`vec3' expected");
+        m3d::vec3 *a = (m3d::vec3*)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 2, "`vec3' expected");
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        luaL_argcheck(L, lua_isnumber(L, 3), 3, "`number' expected");
+        float v = lua_tonumber(L, 3);
+
+        m3d::vec3 c = m3d::vec3::lerp(*a, *b, v);
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *d = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *d = c;
+
+        return 1;
+    }
+
+    int ScriptEngine::s_vec3_slerp(lua_State *L)
+    {
+        if(!lua_argcount(L, 3)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 1, "`vec3' expected");
+        m3d::vec3 *a = (m3d::vec3*)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 2, "`vec3' expected");
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        luaL_argcheck(L, lua_isnumber(L, 3), 3, "`number' expected");
+        float v = lua_tonumber(L, 3);
+
+        //TODO: fix slerp method
+        m3d::vec3 c = m3d::vec3::slerp(*a, *b, v);
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *d = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *d = c;
+
+        return 1;
+    }
+
+    int ScriptEngine::s_vec3_distancesqr(lua_State *L)
+    {
+        if(!lua_argcount(L, 2)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 1, "`vec3' expected");
+        m3d::vec3 *a = (m3d::vec3*)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 2, "`vec3' expected");
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        lua_pushnumber(L, m3d::vec3::distanceSqr(*a, *b));
+
+        return 1;
+    }
+
+    int ScriptEngine::s_vec3_distance(lua_State *L)
+    {
+        if(!lua_argcount(L, 2)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 1, "`vec3' expected");
+        m3d::vec3 *a = (m3d::vec3*)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 2, "`vec3' expected");
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        lua_pushnumber(L, m3d::vec3::distance(*a, *b));
+
+        return 1;
+    }
+
     //////////////////////////////////
     //          QUATERNION          //
     //////////////////////////////////
@@ -648,6 +1017,69 @@ namespace myth
         return 1;
     }
 
+    int ScriptEngine::s_quat_getleft(lua_State *L)
+    {
+        if(!lua_argcount(L, 1)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.quat");
+        luaL_argcheck(L, ud != NULL, 1, "`quat' expected");
+        m3d::quat *a = (m3d::quat*)ud;
+
+        m3d::vec3 c = -a->getRight();
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *d = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *d = c;
+
+        return 1;
+    }
+
+    int ScriptEngine::s_quat_getdown(lua_State *L)
+    {
+        if(!lua_argcount(L, 1)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.quat");
+        luaL_argcheck(L, ud != NULL, 1, "`quat' expected");
+        m3d::quat *a = (m3d::quat*)ud;
+
+        m3d::vec3 c = -a->getUp();
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *d = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *d = c;
+
+        return 1;
+    }
+
+    int ScriptEngine::s_quat_getback(lua_State *L)
+    {
+        if(!lua_argcount(L, 1)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.quat");
+        luaL_argcheck(L, ud != NULL, 1, "`quat' expected");
+        m3d::quat *a = (m3d::quat*)ud;
+
+        m3d::vec3 c = -a->getForward();
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *d = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *d = c;
+
+        return 1;
+    }
+
     int ScriptEngine::s_quat_rotate(lua_State *L)
     {
         if(!lua_argcount(L, 2)) return 0;
@@ -686,6 +1118,88 @@ namespace myth
         m3d::quat *b = (m3d::quat*)ud;
 
         m3d::quat c = m3d::quat::mul(*a, *b);
+
+        size_t nbytes = sizeof(m3d::quat);
+        m3d::quat *d = (m3d::quat*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.quat");
+        lua_setmetatable(L, -2);
+
+        *d = c;
+
+        return 1;
+    }
+
+    int ScriptEngine::s_quat_face(lua_State *L)
+    {
+        if(!lua_argcount(L, 2)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 1, "`vec3' expected");
+        m3d::vec3 *a = (m3d::vec3*)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 2, "`vec3' expected");
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        m3d::quat c = m3d::quat::normalized(m3d::quat::face(*a, *b));
+
+        size_t nbytes = sizeof(m3d::quat);
+        m3d::quat *d = (m3d::quat*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.quat");
+        lua_setmetatable(L, -2);
+
+        *d = c;
+
+        return 1;
+    }
+
+    int ScriptEngine::s_quat_lookat(lua_State *L)
+    {
+        if(!lua_argcount(L, 3)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 1, "`vec3' expected");
+        m3d::vec3 *a = (m3d::vec3*)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 2, "`vec3' expected");
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        ud = luaL_checkudata(L, 3, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 3, "`vec3' expected");
+        m3d::vec3 *c = (m3d::vec3*)ud;
+
+        m3d::quat d = m3d::quat::lookat(*a, *b, *c);
+
+        size_t nbytes = sizeof(m3d::quat);
+        m3d::quat *e = (m3d::quat*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.quat");
+        lua_setmetatable(L, -2);
+
+        *e = d;
+
+        return 1;
+    }
+
+    int ScriptEngine::s_quat_slerp(lua_State *L)
+    {
+        if(!lua_argcount(L, 3)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.quat");
+        luaL_argcheck(L, ud != NULL, 1, "`quat' expected");
+        m3d::quat *a = (m3d::quat*)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.quat");
+        luaL_argcheck(L, ud != NULL, 2, "`quat' expected");
+        m3d::quat *b = (m3d::quat*)ud;
+
+        luaL_argcheck(L, lua_isnumber(L, 3), 3, "`number' expected");
+        float v = lua_tonumber(L, 3);
+
+        m3d::quat c = m3d::quat::slerp(*a, *b, v);
 
         size_t nbytes = sizeof(m3d::quat);
         m3d::quat *d = (m3d::quat*)lua_newuserdata(L, nbytes);
@@ -873,6 +1387,87 @@ namespace myth
         m3d::vec3 *b = (m3d::vec3*)ud;
 
         a->pos = *b;
+
+        return 0;
+    }
+
+    int ScriptEngine::s_transform_getrot(lua_State *L)
+    {
+        if(!lua_argcount(L, 1)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.transform");
+        luaL_argcheck(L, ud != NULL, 1, "`transform' expected");
+
+        Transform *a = *(Transform**)ud;
+
+        size_t nbytes = sizeof(m3d::quat);
+        m3d::quat *b = (m3d::quat*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.quat");
+        lua_setmetatable(L, -2);
+
+        *b = a->rot;
+
+        return 1;
+    }
+
+    int ScriptEngine::s_transform_setrot(lua_State *L)
+    {
+        if(!lua_argcount(L, 2)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.transform");
+        luaL_argcheck(L, ud != NULL, 1, "`transform' expected");
+
+        Transform *a = *(Transform**)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.quat");
+        luaL_argcheck(L, ud != NULL, 2, "`quat' expected");
+
+        m3d::quat *b = (m3d::quat*)ud;
+
+        a->rot = *b;
+
+        return 0;
+    }
+
+    ///////////////////////////////
+    //          MATERIAL         //
+    ///////////////////////////////
+
+    int ScriptEngine::s_material_get(lua_State *L)
+    {
+        if(!lua_argcount(L, 1)) return 0;
+
+        luaL_argcheck(L, lua_isstring(L, 1), 1, "`string' expected");
+
+        std::string mat_name = lua_tostring(L, 1);
+
+        size_t nbytes = sizeof(Material*);
+        Material **b = (Material**)lua_newuserdata(L, nbytes);
+        luaL_getmetatable(L, "Myth.material");
+        lua_setmetatable(L, -2);
+
+        *b = s_bound->m_resources->getMaterial(s_bound->m_resources->getIndex(mat_name));
+
+        return 1;
+    }
+
+    int ScriptEngine::s_material_setuniformv3(lua_State *L)
+    {
+        if(!lua_argcount(L, 3)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.material");
+        luaL_argcheck(L, ud != NULL, 1, "`material' expected");
+        Material *a = *(Material**)ud;
+
+        luaL_argcheck(L, lua_isstring(L, 2), 2, "'string' expected");
+        const char *uniform_name = lua_tostring(L, 2);
+
+        ud = luaL_checkudata(L, 3, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 3, "`vec3' expected");
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        a->setUniform(s_bound->m_resources->getShaderUniformLocation(a->getShader(), uniform_name), *b);
 
         return 0;
     }

@@ -9,4 +9,9 @@ namespace m3d
     float clamp(const float& v, const float& low, const float& high);
 
     float lerp(const float& a, const float& b, const float& t);
+
+    template <typename T> int sign(T val)
+    {
+        return (T(0) < val) - (val < T(0));
+    }
 }

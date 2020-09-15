@@ -18,6 +18,8 @@ namespace m3d
         static mat4x4 initOrthoCentered(const float& w, const float& h, const float& n, const float& f);
         static mat4x4 initPerspective(const float& w, const float& h, const float& fov, const float& n, const float& f);
 
+        static mat4x4 lookat(const vec3& from, const vec3& to, const vec3& up);
+
         static mat4x4 mul(const mat4x4& a, const mat4x4& b);
         static vec4 mul(const mat4x4& a, const vec4& b);
 
