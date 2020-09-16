@@ -35,7 +35,7 @@ namespace myth
         u_textures[unit] = texture;
     }
 
-    void Material::update(dgn::Renderer *renderer, ResourceManager *resources, const dgn::Camera& camera, Transform *transform)
+    void Material::update(dgn::Renderer *renderer, ResourceManager *resources, const dgn::Camera& camera, const Transform& transform)
     {
         m3d::mat4x4 MV_mat = camera.getProjection() * camera.getView();
 
@@ -61,7 +61,10 @@ namespace myth
             switch(m.second)
             {
             case UniformType::MVPMat:
-                dgn::Shader::uniform(m.first, MV_mat * transform->getTransformation());
+                dgn::Shader::uniform(m.first, MV_mat * transform.getTransformation());
+                break;
+            case UniformType::ModelMat:
+                dgn::Shader::uniform(m.first, transform.getTransformation());
                 break;
             case UniformType::Vec3:
                 dgn::Shader::uniform(m.first, u_vec3[m.first]);

@@ -93,6 +93,7 @@ namespace myth
         //////////////////////////////
         static int s_entity_getself(lua_State *L);
         static int s_entity_gettransform(lua_State *L);
+        static int s_entity_getsphere(lua_State *L);
 
         //////////////////////////////////
         //          TRANSFORM           //
@@ -108,6 +109,15 @@ namespace myth
 
         static int s_material_get(lua_State *L);
         static int s_material_setuniformv3(lua_State *L);
+
+        ///////////////////////////////
+        //      SPHERE COLLIDER      //
+        ///////////////////////////////
+
+        static int s_sphere_getPos(lua_State *L);
+        static int s_sphere_getRadius(lua_State *L);
+        static int s_sphere_setPos(lua_State *L);
+        static int s_sphere_setRadius(lua_State *L);
 
         ///////////////////////////////
         //          INPUT            //

@@ -7,13 +7,11 @@ varying vec3 vNorm;
 varying vec2 vTexcoord;
 
 uniform mat4 uMVP;
-//uniform mat3 uNormMat;
+uniform mat4 uM;
 
 void main()
 {
 	gl_Position = uMVP * vec4(aPos, 1);
-	//vNorm = uNormMat * aNorm;
-	vNorm = aNorm;
+	vNorm = mat3(transpose(inverse(uM))) * aNorm;
 	vTexcoord = aTex;
-	//vNorm = aNorm;
 }

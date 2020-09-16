@@ -4,9 +4,10 @@
 
 #include <m3d/vec3.h>
 
+#include <DragonEngine/Renderer.h>
+
 namespace dgn
 {
-    class Renderer;
     class Camera;
 }
 
@@ -16,7 +17,8 @@ namespace myth
     {
         Vec3,
         Int,
-        MVPMat
+        MVPMat,
+        ModelMat
     };
 
     class ResourceManager;
@@ -32,6 +34,8 @@ namespace myth
 
         std::unordered_map<unsigned, unsigned> u_textures;
     public:
+        dgn::DrawMode drawMode = dgn::DrawMode::Triangles;
+
         inline void setShader(const unsigned& shader) { m_shader = shader; }
 
         inline unsigned getShader() { return m_shader; }
@@ -43,6 +47,6 @@ namespace myth
 
         void setTexture(const unsigned& unit, const unsigned& texture);
 
-        void update(dgn::Renderer *renderer, ResourceManager *resources, const dgn::Camera& camera, Transform *transform);
+        void update(dgn::Renderer *renderer, ResourceManager *resources, const dgn::Camera& camera, const Transform& transform);
     };
 }

@@ -51,6 +51,8 @@ namespace myth
         std::unordered_map<std::string, unsigned> m_index_map;
     public:
 
+        void loadDebugObjects();
+
         unsigned loadModel(const ModelData& data);
         unsigned loadTexture(const TextureData& data);
         unsigned loadShader(const ShaderData& data);
@@ -63,7 +65,7 @@ namespace myth
         dgn::Shader *getShader(const unsigned& index);
         Material *getMaterial(const unsigned& index);
 
-        unsigned getIndex(const std::string& name);
+        unsigned getIndex(const std::string& name) const;
 
         int getShaderUniformLocation(const unsigned& index, const char *name);
 

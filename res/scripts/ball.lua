@@ -3,6 +3,8 @@ Ball = {}
 function Ball:new()
 	self.__index = self
 	
+	self.rot = 0
+	
 	return self
 end
 
@@ -13,13 +15,15 @@ function Ball:update()
 	--Material.uniformv3(bricks, "uColorMix", vec3.new())
 
 	local e = Entity.getSelf()
-	local t = Entity.getTransform(e)
+	local t = e:getTransform()
+	local sphere = e:getSphere()
 
-	--t:setPos(vec3.new(math.sin(Myth.frame / 30.0), 4.0, -1.0))
+	sphere:setPos(vec3.new(math.sin(Myth.frame / 60), 0.5, 0.0))
+	sphere:setRadius(math.abs(math.cos(Myth.frame / 40)))
+
+	self.rot = self.rot + Myth.delta
 	
-	local cam = Camera.get()
-	
-	t:setRot(quat.lookat(t:getPos(), cam:getPos(), vec3.up()))
+	t:setRot(quat.angleAxis(self.rot, vec3.up()))
 	
 end
 

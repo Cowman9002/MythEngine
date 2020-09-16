@@ -6,11 +6,12 @@ function Player:new()
 	self.move_speed = 4.0
 	self.cam_speed = 3.4
 	self.cam_move_speed = 3.6
-	self.cam_rot_speed = 10.0
+	self.cam_rot_speed = 15.0
 	
 	self.cam_pitch = 0
 	self.cam_yaw = 0
 	self.cam_dist = 2
+	self.cam_minpower = 1.0
 	self.cam_pos = vec3.new()
 	
 	return self
@@ -64,7 +65,9 @@ function Player:update()
 	local rot_rot = quat.angleAxis(self.cam_yaw, vec3.down())
 	local rot_pos = rot_rot:rotate(vec3.new(0.0, cam_y, cam_x))
 
-	self.cam_pos = vec3.lerp(self.cam_pos, t:getPos(), Myth.delta * self.cam_pos:dist(t:getPos()) * self.cam_move_speed)
+	local spring_factor = math.max(self.cam_minpower, self.cam_pos:dist(t:getPos()) / self.cam_dist)
+
+	self.cam_pos = vec3.lerp(self.cam_pos, t:getPos(), Myth.delta * spring_factor * self.cam_move_speed)
 
 	cam:setPos(self.cam_pos:add(rot_pos))
 

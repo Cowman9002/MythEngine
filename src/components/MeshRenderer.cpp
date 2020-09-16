@@ -19,7 +19,7 @@ namespace myth
 
         for(unsigned i = m_start_index; i < m_num_sub_meshes; i++)
         {
-            ro.transform = &getEntity()->transform;
+            ro.transform = getEntity()->transform;
             ro.model = m_model;
             ro.sub_mesh = i;
             if(i < m_materials.size())

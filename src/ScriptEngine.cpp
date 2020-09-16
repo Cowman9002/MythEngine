@@ -1,19 +1,13 @@
 #include "ScriptEngine.h"
 
+#include "luaEX.h"
+
 #include <m3d/m3d.h>
 #include <DragonEngine/Camera.h>
 
 #include "Transform.h"
 #include "EntityComponent.h"
-
-void print_error(lua_State* L)
- {
-  // The error message is on top of the stack.
-  // Fetch it, print it and then pop it off the stack.
-  const char* message = lua_tostring(L, -1);
-  puts(message);
-  lua_pop(L, 1);
-}
+#include "components/SphereCollider.h"
 
 namespace myth
 {
@@ -90,6 +84,7 @@ namespace myth
         {
             {"getSelf", s_entity_getself},
             {"getTransform", s_entity_gettransform},
+            {"getSphere", s_entity_getsphere},
             {nullptr, nullptr}
         };
 
@@ -106,6 +101,15 @@ namespace myth
         {
             {"get", s_material_get},
             {"uniformv3", s_material_setuniformv3},
+            {nullptr, nullptr}
+        };
+
+        luaL_Reg sphereObject[] =
+        {
+            {"getPos", s_sphere_getPos},
+            {"setPos", s_sphere_setPos},
+            {"getRadius", s_sphere_getRadius},
+            {"setRadius", s_sphere_setRadius},
             {nullptr, nullptr}
         };
 
@@ -190,6 +194,18 @@ namespace myth
         }
         lua_setglobal(L, "Material");
 
+        lua_newtable(L);
+        {
+            luaL_newmetatable(L, "Myth.sphere");
+
+            lua_pushstring(L, "__index");
+            lua_pushvalue(L, -2);  /* pushes the metatable */
+            lua_settable(L, -3);  /* metatable.__index = metatable */
+
+            luaL_setfuncs(L, sphereObject, 0);
+        }
+        lua_setglobal(L, "Sphere");
+
         setInputNamespace(L, inputNamespace);
 
         lua_newtable(L);
@@ -244,22 +260,6 @@ namespace myth
         lua_setglobal(L, instance);
     }
 
-    void ScriptEngine::callScript(const std::string& filename)
-    {
-        int result = luaL_loadfile(L, filename.c_str());
-        if ( result != LUA_OK )
-        {
-            print_error(L);
-            return;
-        }
-        result = lua_pcall(L, 0, LUA_MULTRET, 0);
-        if ( result != LUA_OK )
-        {
-            print_error(L);
-            return;
-        }
-    }
-
     void ScriptEngine::callParameterlessMethod(const unsigned& entity_id, const std::string& comp_name, const std::string& method)
     {
         // get component from lua state
@@ -307,6 +307,11 @@ namespace myth
         lua_pop(L, 1);
 
         //printf("%i\n", lua_gettop(L));
+    }
+
+    void ScriptEngine::callScript(const std::string& filename)
+    {
+        lua_runfile(L, filename);
     }
 
     void setInputNamespace(lua_State *L, luaL_Reg* funcs)
@@ -457,17 +462,6 @@ namespace myth
     ///////////////////////////////////////////
     //            SCRIPT FUNCTIONS           //
     ///////////////////////////////////////////
-
-    bool lua_argcount(lua_State *L, unsigned exp)
-    {
-        unsigned got = lua_gettop(L);
-        if(exp != got)
-        {
-            luaL_error(L, "Error: expected %I arguments, got %I", exp, got);
-            return false;
-        }
-        return true;
-    }
 
     ////////////////////////////
     //          VEC3          //
@@ -1349,6 +1343,26 @@ namespace myth
         return 1;
     }
 
+    int ScriptEngine::s_entity_getsphere(lua_State *L)
+    {
+        if(!lua_argcount(L, 1)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.entity");
+        luaL_argcheck(L, ud != NULL, 1, "`entity' expected");
+
+        Entity *a = *(Entity**)ud;
+
+        size_t nbytes = sizeof(SphereCollider*);
+        SphereCollider **b = (SphereCollider**)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.sphere");
+        lua_setmetatable(L, -2);
+
+        *b = (SphereCollider*)a->getComponent(ComponentType::SphereCollider);
+
+        return 1;
+    }
+
     //////////////////////////////////
     //          TRANSFORM           //
     //////////////////////////////////
@@ -1468,6 +1482,80 @@ namespace myth
         m3d::vec3 *b = (m3d::vec3*)ud;
 
         a->setUniform(s_bound->m_resources->getShaderUniformLocation(a->getShader(), uniform_name), *b);
+
+        return 0;
+    }
+
+    ///////////////////////////////
+    //      SPHERE COLLIDER      //
+    ///////////////////////////////
+
+    int ScriptEngine::s_sphere_getPos(lua_State *L)
+    {
+        if(!lua_argcount(L, 1)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.sphere");
+        luaL_argcheck(L, ud != NULL, 1, "`sphere' expected");
+
+        SphereCollider *a = *(SphereCollider**)ud;
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *b = (m3d::vec3*)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *b = a->getOffset();
+
+        return 1;
+    }
+
+    int ScriptEngine::s_sphere_getRadius(lua_State *L)
+    {
+        if(!lua_argcount(L, 1)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.sphere");
+        luaL_argcheck(L, ud != NULL, 1, "`sphere' expected");
+
+        SphereCollider *a = *(SphereCollider**)ud;
+
+        lua_pushnumber(L, a->getRadius());
+
+        return 1;
+    }
+
+    int ScriptEngine::s_sphere_setPos(lua_State *L)
+    {
+        if(!lua_argcount(L, 2)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.sphere");
+        luaL_argcheck(L, ud != NULL, 1, "`sphere' expected");
+
+        SphereCollider *a = *(SphereCollider**)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 2, "`vec3' expected");
+
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        a->setOffset(*b);
+
+        return 0;
+    }
+
+    int ScriptEngine::s_sphere_setRadius(lua_State *L)
+    {
+        if(!lua_argcount(L, 2)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.sphere");
+        luaL_argcheck(L, ud != NULL, 1, "`sphere' expected");
+
+        SphereCollider *a = *(SphereCollider**)ud;
+
+        luaL_argcheck(L, lua_isnumber(L, 2), 2, "`number' expected");
+        float b = lua_tonumber(L, 2);
+
+        a->setRadius(b);
 
         return 0;
     }

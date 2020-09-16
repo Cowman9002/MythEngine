@@ -6,18 +6,13 @@
 #include "Transform.h"
 
 #include <DragonEngine/Camera.h>
-
-namespace dgn
-{
-    class Renderer;
-    class Camera;
-}
+#include <DragonEngine/Renderer.h>
 
 namespace myth
 {
     struct RenderObject
     {
-        myth::Transform *transform;
+        myth::Transform transform;
         unsigned material;
         unsigned model;
         unsigned sub_mesh;

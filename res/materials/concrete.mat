@@ -1,4 +1,5 @@
 shader:textured_lit
 uniformc:uMVP;MVPMat
+uniformc:uM;ModelMat
 uniformv3:uColorMix;1.0;1.0;1.0
 texture:concrete_texture;0

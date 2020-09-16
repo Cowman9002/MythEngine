@@ -5,6 +5,7 @@
 #include "EntityComponent.h"
 #include "ScriptEngine.h"
 #include "SceneLoader.h"
+#include "PhysicsEngine.h"
 
 #include <DragonEngine/Window.h>
 
@@ -20,6 +21,7 @@ namespace myth
         SceneGraph m_scene_graph;
         ScriptEngine m_script_engine;
         SceneLoader m_scene_loader;
+        PhysicsEngine m_physics;
 
         dgn::Window m_window;
 

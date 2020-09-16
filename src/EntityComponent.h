@@ -11,6 +11,7 @@ namespace myth
     {
         MeshRenderer,
         Script,
+        SphereCollider,
         Size
     };
 

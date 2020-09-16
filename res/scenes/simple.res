@@ -1,3 +1,4 @@
+
 Texture
 res/textures/bricks_1/color.png
 bricks_texture
@@ -79,8 +80,8 @@ res/models/ball.obj
 ball
 
 Model
-res/models/mario.obj
-mario
+res/models/cube.obj
+cube
 
 Shader
 res/shaders/textured.vert

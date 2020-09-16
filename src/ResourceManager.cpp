@@ -6,6 +6,25 @@
 
 namespace myth
 {
+    void ResourceManager::loadDebugObjects()
+    {
+        ModelData mod;
+        ShaderData shd;
+        MaterialData mtd;
+
+        mod.filepath = "res/models/wire_sphere.obj";
+        mod.name = "debug_wire_sphere";
+        loadModel(mod);
+
+        shd.v_filepath = "res/shaders/wireframe.vert";
+        shd.f_filepath = "res/shaders/wireframe.frag";
+        shd.name = "debug_wire_shader";
+        loadShader(shd);
+
+        mtd.filepath = "res/materials/wireframe.mat";
+        mtd.name = "debug_wire_mat";
+        loadMaterial(mtd);
+    }
 
     unsigned ResourceManager::loadModel(const ModelData& data)
     {
@@ -123,6 +142,10 @@ namespace myth
                     {
                         u_type = UniformType::MVPMat;
                     }
+                    else if(data_split[1].compare("ModelMat") == 0)
+                    {
+                        u_type = UniformType::ModelMat;
+                    }
 
                     res.setUniformAs(getShaderUniformLocation(shader_index, data_split[0].c_str()), u_type);
                 }
@@ -159,6 +182,20 @@ namespace myth
                 if(data_split.size() > 1)
                 {
                     res.setUniform(getShaderUniformLocation(shader_index, data_split[0].c_str()), std::stoi(data_split[1]));
+                }
+                else
+                {
+                    printf("Too few parameters for uniformi in material: %s\n", data.filepath.c_str());
+                }
+            }
+            else if(fun.compare("drawmode") == 0)
+            {
+                if(data_split.size() > 0)
+                {
+                    if(data_split[0].compare("lines") == 0)
+                    {
+                        res.drawMode = dgn::DrawMode::Lines;
+                    }
                 }
                 else
                 {
@@ -231,7 +268,7 @@ namespace myth
         return nullptr;
     }
 
-    unsigned ResourceManager::getIndex(const std::string& name)
+    unsigned ResourceManager::getIndex(const std::string& name) const
     {
         auto n = m_index_map.find(name);
 

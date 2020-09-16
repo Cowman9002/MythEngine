@@ -75,13 +75,13 @@
 	<m3d/quat.h>
 	<m3d/mat4x4.h>
 
-1600116607 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
+1600291749 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
 	"ResourceManager.h"
 	<fstream>
 	<iostream>
 	<sstream>
 
-1599911782 c:\dev\cpp\mythengine\src\resourcemanager.h
+1600290978 c:\dev\cpp\mythengine\src\resourcemanager.h
 	<DragonEngine/Mesh.h>
 	<DragonEngine/Texture.h>
 	<DragonEngine/Shader.h>
@@ -118,45 +118,48 @@
 
 1598798176 c:\dev\cpp\mythengine\include\m3d\vec4.h
 
-1600201118 source:c:\dev\cpp\mythengine\src\material.cpp
+1600291713 source:c:\dev\cpp\mythengine\src\material.cpp
 	"Material.h"
 	<DragonEngine/Renderer.h>
 	<DragonEngine/Camera.h>
 	"Transform.h"
 	"ResourceManager.h"
 
-1600022331 c:\dev\cpp\mythengine\src\material.h
+1600291694 c:\dev\cpp\mythengine\src\material.h
 	<unordered_map>
 	<m3d/vec3.h>
+	<DragonEngine/Renderer.h>
 
 1600202137 c:\dev\cpp\mythengine\src\transform.h
 	<m3d/m3d.h>
 
-1599854623 source:c:\dev\cpp\mythengine\src\renderingengine.cpp
+1600291100 source:c:\dev\cpp\mythengine\src\renderingengine.cpp
 	"RenderingEngine.h"
 	"ResourceManager.h"
 	<DragonEngine/Renderer.h>
 	<DragonEngine/Camera.h>
 
-1599853819 c:\dev\cpp\mythengine\src\renderingengine.h
+1600290323 c:\dev\cpp\mythengine\src\renderingengine.h
 	<vector>
 	"Material.h"
 	"Transform.h"
 	<DragonEngine/Camera.h>
+	<DragonEngine/Renderer.h>
 
-1600206766 source:c:\dev\cpp\mythengine\src\coreengine.cpp
+1600290942 source:c:\dev\cpp\mythengine\src\coreengine.cpp
 	"CoreEngine.h"
 	<DragonEngine/ErrorString.h>
 	"components/MeshRenderer.h"
 	"components/ScriptComponent.h"
 	<cmath>
 
-1600206817 c:\dev\cpp\mythengine\src\coreengine.h
+1600285478 c:\dev\cpp\mythengine\src\coreengine.h
 	"ResourceManager.h"
 	"RenderingEngine.h"
 	"EntityComponent.h"
 	"ScriptEngine.h"
 	"SceneLoader.h"
+	"PhysicsEngine.h"
 	<DragonEngine/Window.h>
 
 1599741196 c:\dev\cpp\mythengine\include\dragonengine\errorstring.h
@@ -164,12 +167,12 @@
 1600168222 source:c:\dev\cpp\mythengine\src\entitycomponent.cpp
 	"EntityComponent.h"
 
-1600168190 c:\dev\cpp\mythengine\src\entitycomponent.h
+1600284725 c:\dev\cpp\mythengine\src\entitycomponent.h
 	<vector>
 	<unordered_map>
 	"Transform.h"
 
-1600119574 source:c:\dev\cpp\mythengine\src\components\meshrenderer.cpp
+1600290330 source:c:\dev\cpp\mythengine\src\components\meshrenderer.cpp
 	"MeshRenderer.h"
 	"ResourceManager.h"
 	"RenderingEngine.h"
@@ -202,14 +205,15 @@
 	<stdio.h>
 	"lua.h"
 
-1600206707 source:c:\dev\cpp\mythengine\src\scriptengine.cpp
+1600287704 source:c:\dev\cpp\mythengine\src\scriptengine.cpp
 	"ScriptEngine.h"
+	"luaEX.h"
 	<m3d/m3d.h>
 	<DragonEngine/Camera.h>
 	"Transform.h"
 	"EntityComponent.h"
 
-1600206689 c:\dev\cpp\mythengine\src\scriptengine.h
+1600292083 c:\dev\cpp\mythengine\src\scriptengine.h
 	<lua/lua.hpp>
 	<string>
 	<vector>
@@ -225,17 +229,57 @@
 1600117103 source:c:\dev\cpp\mythengine\src\components\scriptcomponent.cpp
 	"ScriptComponent.h"
 
-1600172508 c:\dev\cpp\mythengine\src\sceneloader.h
+1600285314 c:\dev\cpp\mythengine\src\sceneloader.h
 	"EntityComponent.h"
 	"ResourceManager.h"
 	"ScriptEngine.h"
 	"RenderingEngine.h"
+	"PhysicsEngine.h"
 
-1600203221 source:c:\dev\cpp\mythengine\src\sceneloader.cpp
+1600289423 source:c:\dev\cpp\mythengine\src\sceneloader.cpp
 	"SceneLoader.h"
 	<fstream>
 	<iostream>
 	<sstream>
 	"components/MeshRenderer.h"
 	"components/ScriptComponent.h"
+	"components/SphereCollider.h"
+
+1600291319 source:c:\dev\cpp\mythengine\src\components\spherecollider.cpp
+	"SphereCollider.h"
+	<TigerEngine/Sphere.h>
+	"../PhysicsEngine.h"
+
+1600285815 c:\dev\cpp\mythengine\src\components\spherecollider.h
+	"../EntityComponent.h"
+	<m3d/vec3.h>
+	<TigerEngine/Sphere.h>
+
+1599275845 c:\dev\cpp\mythengine\include\tigerengine\sphere.h
+	"Collider.h"
+	<vector>
+
+1600283789 c:\dev\cpp\mythengine\include\tigerengine\collider.h
+	<m3d/vec3.h>
+
+1600291015 c:\dev\cpp\mythengine\src\physicsengine.h
+	<TigerEngine/Collider.h>
+	<lua/lua.hpp>
+	<vector>
+	<string>
+
+1600291012 source:c:\dev\cpp\mythengine\src\physicsengine.cpp
+	"PhysicsEngine.h"
+	"luaEX.h"
+	"RenderingEngine.h"
+	"ResourceManager.h"
+	<TigerEngine/Sphere.h>
+	<stdio.h>
+
+1600287794 c:\dev\cpp\mythengine\src\luaex.h
+	<string>
+
+1600287787 source:c:\dev\cpp\mythengine\src\luaex.cpp
+	<lua/lua.hpp>
+	<string>
 

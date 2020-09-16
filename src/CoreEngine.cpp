@@ -26,9 +26,11 @@ namespace myth
         m_render.getCamera()->width = width;
         m_render.getCamera()->height = height;
 
+        if(!m_physics.initialze("res/scripts/physics.lua")) return false;
+
         if(!m_script_engine.initialize(&m_window, &m_render, &m_resources)) return false;
 
-        if(!m_scene_loader.initialize(&m_scene_graph, &m_resources, &m_script_engine, &m_render)) return false;
+        if(!m_scene_loader.initialize(&m_scene_graph, &m_resources, &m_script_engine, &m_render, &m_physics)) return false;
 
         m_initialized = true;
 
@@ -48,6 +50,8 @@ namespace myth
         //////////////////////////////////
         //        LOAD RESOURCES        //
         //////////////////////////////////
+
+        m_resources.loadDebugObjects();
 
         m_scene_loader.loadResources("res/scenes/simple.res");
 
@@ -85,7 +89,11 @@ namespace myth
 
             m_scene_graph.update();
 
+            m_scene_graph.fixedUpdate();
+            m_physics.simulate();
+
             m_scene_graph.render(&m_render);
+            m_physics.render(m_render, m_resources);
 
             m_render.drawAll();
             m_window.swapBuffers();

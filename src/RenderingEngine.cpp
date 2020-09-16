@@ -47,6 +47,7 @@ namespace myth
                 if(material != nullptr)
                 {
                     material->update(m_renderer, m_resources, m_camera, r.transform);
+                    m_renderer->setDrawMode(material->drawMode);
                 }
                 m_renderer->bindMesh(model->at(r.sub_mesh));
                 m_renderer->drawBoundMesh();

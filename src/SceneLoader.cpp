@@ -6,17 +6,23 @@
 
 #include "components/MeshRenderer.h"
 #include "components/ScriptComponent.h"
+#include "components/SphereCollider.h"
 
 namespace myth
 {
-    bool SceneLoader::initialize(SceneGraph *sceneGraph, ResourceManager *resources, ScriptEngine *scriptEngine, RenderingEngine *render)
+    bool SceneLoader::initialize(SceneGraph *sceneGraph,
+                                 ResourceManager *resources,
+                                 ScriptEngine *scriptEngine,
+                                 RenderingEngine *render,
+                                 PhysicsEngine *physics)
     {
-        if(!sceneGraph || !resources || !scriptEngine || !render) return false;
+        if(!sceneGraph || !resources || !scriptEngine || !render || !physics) return false;
 
         m_sceneGraph = sceneGraph;
         m_resources = resources;
         m_script_engine = scriptEngine;
         m_render = render;
+        m_physics = physics;
 
         return true;
     }
@@ -149,19 +155,19 @@ namespace myth
                         int size = std::stoi(data_split[2]);
                         size = size < 0 ? m->size() : size;
 
-                        MeshRenderer level_renderer = MeshRenderer(model_index, std::stoi(data_split[1]), size);
+                        MeshRenderer renderer = MeshRenderer(model_index, std::stoi(data_split[1]), size);
 
                         unsigned j = data_split.size();
                         for(unsigned i = 3; i < j; i++)
                         {
-                            level_renderer.addMaterial(m_resources->getIndex(data_split[i]));
+                            renderer.addMaterial(m_resources->getIndex(data_split[i]));
                         }
 
-                        currentEntity->addComponent(new MeshRenderer(level_renderer));
+                        currentEntity->addComponent(new MeshRenderer(renderer));
                     }
                     else
                     {
-                        printf("Too few parameters for entity mesh renderer: %s\n", path.c_str());
+                        printf("Too few parameters for mesh renderer component: %s\n", path.c_str());
                     }
                 }
                 else if(fun.compare("script") == 0)
@@ -172,7 +178,24 @@ namespace myth
                     }
                     else
                     {
-                        printf("Too few parameters for entity name: %s\n", path.c_str());
+                        printf("Too few parameters for script component: %s\n", path.c_str());
+                    }
+                }
+                else if(fun.compare("sphere") == 0)
+                {
+                    if(data_split.size() > 3)
+                    {
+                        SphereCollider *col = new SphereCollider(std::stof(data_split[0]),
+                                                m3d::vec3(std::stof(data_split[1]),
+                                                          std::stof(data_split[2]),
+                                                          std::stof(data_split[3])));
+
+                       currentEntity->addComponent(col);
+                        m_physics->addCollider(col->getNativeCollider());
+                    }
+                    else
+                    {
+                        printf("Too few parameters for sphere component: %s\n", path.c_str());
                     }
                 }
             }
