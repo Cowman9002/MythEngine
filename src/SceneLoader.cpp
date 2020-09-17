@@ -7,6 +7,7 @@
 #include "components/MeshRenderer.h"
 #include "components/ScriptComponent.h"
 #include "components/SphereCollider.h"
+#include "components/AABBCollider.h"
 
 namespace myth
 {
@@ -40,7 +41,7 @@ namespace myth
         std::string line;
         Entity *currentEntity;
         dgn::Camera *currentCamera;
-        unsigned camera_id = 0;
+        //unsigned camera_id = 0;
 
         unsigned inside_of = 0;
 
@@ -191,11 +192,31 @@ namespace myth
                                                           std::stof(data_split[3])));
 
                        currentEntity->addComponent(col);
-                        m_physics->addCollider(col->getNativeCollider());
+                        m_physics->addCollider(col);
                     }
                     else
                     {
                         printf("Too few parameters for sphere component: %s\n", path.c_str());
+                    }
+                }
+                else if(fun.compare("aabb") == 0)
+                {
+                    if(data_split.size() > 5)
+                    {
+                        AABBCollider *col = new AABBCollider(
+                                    m3d::vec3(std::stof(data_split[0]),
+                                              std::stof(data_split[1]),
+                                              std::stof(data_split[2])),
+                                    m3d::vec3(std::stof(data_split[3]),
+                                              std::stof(data_split[4]),
+                                              std::stof(data_split[5])));
+
+                       currentEntity->addComponent(col);
+                        m_physics->addCollider(col);
+                    }
+                    else
+                    {
+                        printf("Too few parameters for aabb component: %s\n", path.c_str());
                     }
                 }
             }

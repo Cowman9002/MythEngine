@@ -1,11 +1,8 @@
 #include "SphereCollider.h"
 
-#include <TigerEngine/Sphere.h>
-#include "../PhysicsEngine.h"
-
 namespace myth
 {
-    SphereCollider::SphereCollider(const float& radius, const m3d::vec3& offset) : Component(ComponentType::SphereCollider)
+    SphereCollider::SphereCollider(const float& radius, const m3d::vec3& offset) : CollisionComponent(ComponentType::SphereCollider)
     {
         m_collider.setRadius(radius);
         m_offset = offset;

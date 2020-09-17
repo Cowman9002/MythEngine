@@ -16,6 +16,10 @@ namespace myth
         mod.name = "debug_wire_sphere";
         loadModel(mod);
 
+        mod.filepath = "res/models/wire_cube.obj";
+        mod.name = "debug_wire_cube";
+        loadModel(mod);
+
         shd.v_filepath = "res/shaders/wireframe.vert";
         shd.f_filepath = "res/shaders/wireframe.frag";
         shd.name = "debug_wire_shader";

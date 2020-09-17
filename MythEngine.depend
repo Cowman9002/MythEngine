@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1600174755 source:c:\dev\cpp\mythengine\src\main.cpp
+1600344373 source:c:\dev\cpp\mythengine\src\main.cpp
 	"CoreEngine.h"
 	"ScriptEngine.h"
 
@@ -75,7 +75,7 @@
 	<m3d/quat.h>
 	<m3d/mat4x4.h>
 
-1600291749 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
+1600342897 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
 	"ResourceManager.h"
 	<fstream>
 	<iostream>
@@ -167,7 +167,7 @@
 1600168222 source:c:\dev\cpp\mythengine\src\entitycomponent.cpp
 	"EntityComponent.h"
 
-1600284725 c:\dev\cpp\mythengine\src\entitycomponent.h
+1600343894 c:\dev\cpp\mythengine\src\entitycomponent.h
 	<vector>
 	<unordered_map>
 	"Transform.h"
@@ -205,15 +205,14 @@
 	<stdio.h>
 	"lua.h"
 
-1600287704 source:c:\dev\cpp\mythengine\src\scriptengine.cpp
+1600347248 source:c:\dev\cpp\mythengine\src\scriptengine.cpp
 	"ScriptEngine.h"
 	"luaEX.h"
+	"scriptFunctions/LuaScripts.h"
 	<m3d/m3d.h>
 	<DragonEngine/Camera.h>
-	"Transform.h"
-	"EntityComponent.h"
 
-1600292083 c:\dev\cpp\mythengine\src\scriptengine.h
+1600347072 c:\dev\cpp\mythengine\src\scriptengine.h
 	<lua/lua.hpp>
 	<string>
 	<vector>
@@ -236,7 +235,7 @@
 	"RenderingEngine.h"
 	"PhysicsEngine.h"
 
-1600289423 source:c:\dev\cpp\mythengine\src\sceneloader.cpp
+1600346713 source:c:\dev\cpp\mythengine\src\sceneloader.cpp
 	"SceneLoader.h"
 	<fstream>
 	<iostream>
@@ -244,14 +243,13 @@
 	"components/MeshRenderer.h"
 	"components/ScriptComponent.h"
 	"components/SphereCollider.h"
+	"components/AABBCollider.h"
 
-1600291319 source:c:\dev\cpp\mythengine\src\components\spherecollider.cpp
+1600346554 source:c:\dev\cpp\mythengine\src\components\spherecollider.cpp
 	"SphereCollider.h"
-	<TigerEngine/Sphere.h>
-	"../PhysicsEngine.h"
 
-1600285815 c:\dev\cpp\mythengine\src\components\spherecollider.h
-	"../EntityComponent.h"
+1600346407 c:\dev\cpp\mythengine\src\components\spherecollider.h
+	"CollisionComponent.h"
 	<m3d/vec3.h>
 	<TigerEngine/Sphere.h>
 
@@ -259,21 +257,23 @@
 	"Collider.h"
 	<vector>
 
-1600283789 c:\dev\cpp\mythengine\include\tigerengine\collider.h
+1600345335 c:\dev\cpp\mythengine\include\tigerengine\collider.h
 	<m3d/vec3.h>
 
-1600291015 c:\dev\cpp\mythengine\src\physicsengine.h
-	<TigerEngine/Collider.h>
+1600347788 c:\dev\cpp\mythengine\src\physicsengine.h
+	"components/CollisionComponent.h"
 	<lua/lua.hpp>
 	<vector>
 	<string>
 
-1600291012 source:c:\dev\cpp\mythengine\src\physicsengine.cpp
+1600347424 source:c:\dev\cpp\mythengine\src\physicsengine.cpp
 	"PhysicsEngine.h"
 	"luaEX.h"
+	"scriptFunctions/LuaScripts.h"
 	"RenderingEngine.h"
 	"ResourceManager.h"
 	<TigerEngine/Sphere.h>
+	<TigerEngine/AABB.h>
 	<stdio.h>
 
 1600287794 c:\dev\cpp\mythengine\src\luaex.h
@@ -282,4 +282,76 @@
 1600287787 source:c:\dev\cpp\mythengine\src\luaex.cpp
 	<lua/lua.hpp>
 	<string>
+
+1600341399 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_camera.cpp
+	"../ScriptEngine.h"
+	"../luaEX.h"
+
+1600342013 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_input.cpp
+	"../ScriptEngine.h"
+	"../luaEX.h"
+
+1600341791 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_material.cpp
+	"../ScriptEngine.h"
+	"../luaEX.h"
+
+1600342122 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_quat.cpp
+	"../ScriptEngine.h"
+	"../luaEX.h"
+
+1600343882 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_entity.cpp
+	"../ScriptEngine.h"
+	"../luaEX.h"
+	"../EntityComponent.h"
+	"../Transform.h"
+	"../components/SphereCollider.h"
+	"../components/AABBCollider.h"
+
+1600343816 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_sphere.cpp
+	"../ScriptEngine.h"
+	"../luaEX.h"
+	"../components/SphereCollider.h"
+
+1600341740 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_transform.cpp
+	"../ScriptEngine.h"
+	"../luaEX.h"
+	"../EntityComponent.h"
+	"../Transform.h"
+
+1600347345 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_vec3.cpp
+	"LuaScripts.h"
+	"../luaEX.h"
+	<m3d/vec3.h>
+
+1600346544 source:c:\dev\cpp\mythengine\src\components\aabbcollider.cpp
+	"AABBCollider.h"
+
+1600346479 c:\dev\cpp\mythengine\src\components\aabbcollider.h
+	"CollisionComponent.h"
+	<m3d/vec3.h>
+	<TigerEngine/AABB.h>
+
+1599327857 c:\dev\cpp\mythengine\include\tigerengine\aabb.h
+	"Collider.h"
+	<vector>
+
+1600343932 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_aabb.cpp
+	"../ScriptEngine.h"
+	"../luaEX.h"
+	"../components/AABBCollider.h"
+
+1600347801 source:c:\dev\cpp\mythengine\src\scriptfunctions\p_collision.cpp
+	"../PhysicsEngine.h"
+	"../luaEX.h"
+
+1600346782 c:\dev\cpp\mythengine\src\components\collisioncomponent.h
+	"../EntityComponent.h"
+	<TigerEngine/Collider.h>
+
+1600347826 source:c:\dev\cpp\mythengine\src\scriptfunctions\p_collider.cpp
+	"../PhysicsEngine.h"
+	"../luaEX.h"
+
+1600347235 c:\dev\cpp\mythengine\src\scriptfunctions\luascripts.h
+	<lua/lua.hpp>
 

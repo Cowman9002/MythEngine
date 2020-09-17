@@ -1,10 +1,13 @@
 #include "PhysicsEngine.h"
 
 #include "luaEX.h"
+#include "scriptFunctions/LuaScripts.h"
+
 #include "RenderingEngine.h"
 #include "ResourceManager.h"
 
 #include <TigerEngine/Sphere.h>
+#include <TigerEngine/AABB.h>
 
 #include <stdio.h>
 
@@ -15,23 +18,9 @@ namespace myth
         L = luaL_newstate();
         luaL_openlibs(L);
 
-        luaL_Reg collisionObject[] =
-        {
-            {"collide", s_collision_collide},
-            {nullptr, nullptr}
-        };
-
-        lua_newtable(L);
-        {
-            luaL_newmetatable(L, "Myth.collider");
-
-            lua_pushstring(L, "__index");
-            lua_pushvalue(L, -2);  /* pushes the metatable */
-            lua_settable(L, -3);  /* metatable.__index = metatable */
-
-            luaL_setfuncs(L, collisionObject, 0);
-        }
-        lua_setglobal(L, "Collider");
+        l_vec3_openlibs(L);
+        collider_loadlibs();
+        collision_loadlibs();
 
         // load simulation file into state
         lua_runfile(L, filepath);
@@ -59,11 +48,11 @@ namespace myth
                     // push parameters
 
                     size_t nbytes = sizeof(tgr::Collider*);
-                    tgr::Collider **a = (tgr::Collider**)lua_newuserdata(L, nbytes);
+                    CollisionComponent **a = (CollisionComponent**)lua_newuserdata(L, nbytes);
                     luaL_getmetatable(L, "Myth.collider");
                     lua_setmetatable(L, -2);
 
-                    tgr::Collider **b = (tgr::Collider**)lua_newuserdata(L, nbytes);
+                    CollisionComponent **b = (CollisionComponent**)lua_newuserdata(L, nbytes);
                     luaL_getmetatable(L, "Myth.collider");
                     lua_setmetatable(L, -2);
 
@@ -81,7 +70,7 @@ namespace myth
         }
     }
 
-    void PhysicsEngine::addCollider(tgr::Collider* col)
+    void PhysicsEngine::addCollider(CollisionComponent* col)
     {
         m_colliders.push_back(col);
     }
@@ -91,8 +80,10 @@ namespace myth
 
     void PhysicsEngine::render(RenderingEngine& render, const ResourceManager& resources)
     {
-        for(tgr::Collider *col : m_colliders)
+        for(CollisionComponent *collider : m_colliders)
         {
+            tgr::Collider *col = collider->getNativeCollider();
+
             if(col->getType() == tgr::ColliderType::Sphere)
             {
                 tgr::Sphere *sphere = (tgr::Sphere*)col;
@@ -110,23 +101,24 @@ namespace myth
 
                 render.add(ro);
             }
+            else if(col->getType() == tgr::ColliderType::AABB)
+            {
+                tgr::AABB *aabb = (tgr::AABB*)col;
+
+                Transform t;
+                t.pos = aabb->getCenter();
+                t.scale = m3d::vec3(aabb->getExtents());
+
+                RenderObject ro;
+
+                ro.material = resources.getIndex("debug_wire_mat");
+                ro.model = resources.getIndex("debug_wire_cube");
+                ro.sub_mesh = 0;
+                ro.transform = t;
+
+                render.add(ro);
+            }
         }
     }
 
-    int PhysicsEngine::s_collision_collide(lua_State *L)
-    {
-        if(!lua_argcount(L, 2)) return 0;
-
-        void *ud = luaL_checkudata(L, 1, "Myth.collider");
-        luaL_argcheck(L, ud != NULL, 1, "`collider' expected");
-        tgr::Collider *a = *(tgr::Collider**)ud;
-
-        ud = luaL_checkudata(L, 2, "Myth.collider");
-        luaL_argcheck(L, ud != NULL, 2, "`collider' expected");
-        tgr::Collider *b = *(tgr::Collider**)ud;
-
-        lua_pushboolean(L, a->checkCollision(b).hit);
-
-        return 1;
-    }
 }

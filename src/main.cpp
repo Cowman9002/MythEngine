@@ -5,9 +5,8 @@
 
 #include "ScriptEngine.h"
 
-//TODO: move lua script methods to separate files
-//TODO: add aabb collider
 //TODO: increase functionality of scriptable physics pipeline
+//TODO: clean up scene and resource loading cpp file
 
 int main(int argc, char *argv[])
 {

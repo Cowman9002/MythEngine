@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../EntityComponent.h"
+#include "CollisionComponent.h"
 #include <m3d/vec3.h>
 #include <TigerEngine/Sphere.h>
 
 namespace myth
 {
     class PhysicsEngine;
-    class SphereCollider : public Component
+    class SphereCollider : public CollisionComponent
     {
     private:
         tgr::Sphere m_collider;
@@ -23,7 +23,7 @@ namespace myth
 
         virtual void fixedUpdate() override;
 
-        inline tgr::Collider *getNativeCollider() { return &m_collider; };
+        inline virtual tgr::Collider *getNativeCollider() override { return &m_collider; };
     };
 }
 

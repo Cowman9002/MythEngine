@@ -1,6 +1,7 @@
 #pragma once
 
-#include <TigerEngine/Collider.h>
+#include "components/CollisionComponent.h"
+
 #include <lua/lua.hpp>
 #include <vector>
 #include <string>
@@ -12,7 +13,7 @@ namespace myth
     class PhysicsEngine
     {
     private:
-        std::vector<tgr::Collider*> m_colliders;
+        std::vector<CollisionComponent*> m_colliders;
         lua_State* L;
     public:
 
@@ -23,9 +24,17 @@ namespace myth
 
         void render(RenderingEngine& render, const ResourceManager& resources);
 
-        void addCollider(tgr::Collider* col);
+        void addCollider(CollisionComponent* col);
 
     private:
-        static int s_collision_collide(lua_State *L);
+
+        void collider_loadlibs();
+        static int s_collider_collide(lua_State *L);
+        static int s_collider_translate(lua_State *L);
+
+        void collision_loadlibs();
+        static int s_collision_hit(lua_State *L);
+        static int s_collision_depth(lua_State *L);
+        static int s_collision_normal(lua_State *L);
     };
 }

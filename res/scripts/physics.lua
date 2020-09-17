@@ -1,8 +1,12 @@
 
 function simulate(a, b)
 
-	if a:collide(b) then
-		print("hit")
+	local collision = a:collide(b)
+
+	if collision:hit() then
+		local t = collision:normal()
+		t = t:mul(collision:depth())
+		a:translate(t)
 	end
 
 end

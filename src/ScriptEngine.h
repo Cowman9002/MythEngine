@@ -21,6 +21,8 @@ namespace myth
 
         Entity *m_current_entity;
 
+        static ScriptEngine *s_bound;
+
     public:
         bool initialize(dgn::Window *window, RenderingEngine *render, ResourceManager *resources);
         void terminate();
@@ -35,36 +37,11 @@ namespace myth
         void setNamespaceValue(const std::string& namesp, const std::string& valueName, const double& value);
     private:
 
-        ////////////////////////////
-        //          VEC3          //
-        ////////////////////////////
-        static int s_vec3_new(lua_State *L);
-        static int s_vec3_getx(lua_State *L);
-        static int s_vec3_gety(lua_State *L);
-        static int s_vec3_getz(lua_State *L);
-        static int s_vec3_setx(lua_State *L);
-        static int s_vec3_sety(lua_State *L);
-        static int s_vec3_setz(lua_State *L);
-        static int s_vec3_add(lua_State *L);
-        static int s_vec3_sub(lua_State *L);
-        static int s_vec3_mul(lua_State *L);
-        static int s_vec3_div(lua_State *L);
-        static int s_vec3_down(lua_State *L);
-        static int s_vec3_up(lua_State *L);
-        static int s_vec3_left(lua_State *L);
-        static int s_vec3_right(lua_State *L);
-        static int s_vec3_forward(lua_State *L);
-        static int s_vec3_back(lua_State *L);
-        static int s_vec3_normalized(lua_State *L);
-        static int s_vec3_lerp(lua_State *L);
-        static int s_vec3_slerp(lua_State *L);
-        static int s_vec3_distancesqr(lua_State *L);
-        static int s_vec3_distance(lua_State *L);
-
         ///////////////////////////////////
         //          QUATERNION           //
         ///////////////////////////////////
 
+        void quat_openlibs();
         static int s_quat_angleaxis(lua_State *L);
         static int s_quat_getright(lua_State *L);
         static int s_quat_getup(lua_State *L);
@@ -74,14 +51,22 @@ namespace myth
         static int s_quat_getback(lua_State *L);
         static int s_quat_rotate(lua_State *L);
         static int s_quat_mul(lua_State *L);
-        static int s_quat_face(lua_State *L);
         static int s_quat_lookat(lua_State *L);
         static int s_quat_slerp(lua_State *L);
+
+        ///////////////////////////////
+        //          MATERIAL         //
+        ///////////////////////////////
+
+        void material_openlibs();
+        static int s_material_get(lua_State *L);
+        static int s_material_setuniformv3(lua_State *L);
 
         /////////////////////////////////
         //            CAMERA           //
         /////////////////////////////////
 
+        void camera_openlibs();
         static int s_camera_get(lua_State *L);
         static int s_camera_setpos(lua_State *L);
         static int s_camera_setrot(lua_State *L);
@@ -91,37 +76,48 @@ namespace myth
         //////////////////////////////
         //          ENTITY          //
         //////////////////////////////
+
+        void entity_openlibs();
         static int s_entity_getself(lua_State *L);
         static int s_entity_gettransform(lua_State *L);
         static int s_entity_getsphere(lua_State *L);
+        static int s_entity_getaabb(lua_State *L);
 
         //////////////////////////////////
         //          TRANSFORM           //
         //////////////////////////////////
+
+        void transform_openlibs();
         static int s_transform_getpos(lua_State *L);
         static int s_transform_setpos(lua_State *L);
         static int s_transform_getrot(lua_State *L);
         static int s_transform_setrot(lua_State *L);
 
         ///////////////////////////////
-        //          MATERIAL         //
-        ///////////////////////////////
-
-        static int s_material_get(lua_State *L);
-        static int s_material_setuniformv3(lua_State *L);
-
-        ///////////////////////////////
         //      SPHERE COLLIDER      //
         ///////////////////////////////
 
-        static int s_sphere_getPos(lua_State *L);
-        static int s_sphere_getRadius(lua_State *L);
-        static int s_sphere_setPos(lua_State *L);
-        static int s_sphere_setRadius(lua_State *L);
+        void sphere_openlibs();
+        static int s_sphere_getpos(lua_State *L);
+        static int s_sphere_getradius(lua_State *L);
+        static int s_sphere_setpos(lua_State *L);
+        static int s_sphere_setradius(lua_State *L);
+
+        //////////////////////////////
+        //       AABB COLLIDER      //
+        //////////////////////////////
+
+        void aabb_openlibs();
+        static int s_aabb_getpos(lua_State *L);
+        static int s_aabb_getextents(lua_State *L);
+        static int s_aabb_setpos(lua_State *L);
+        static int s_aabb_setextents(lua_State *L);
 
         ///////////////////////////////
         //          INPUT            //
         ///////////////////////////////
+
+        void input_openlibs();
         static int s_input_getkey(lua_State *L);
         static int s_input_getkeydown(lua_State *L);
         static int s_input_getkeyup(lua_State *L);

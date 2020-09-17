@@ -20,6 +20,8 @@ namespace tgr
     struct Collision
     {
         bool hit = false;
+        float penetration = 0;
+        m3d::vec3 normal = m3d::vec3();
     };
 
     class Collider

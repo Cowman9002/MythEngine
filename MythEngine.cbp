@@ -64,6 +64,9 @@
 		<Unit filename="src/ScriptEngine.cpp" />
 		<Unit filename="src/ScriptEngine.h" />
 		<Unit filename="src/Transform.h" />
+		<Unit filename="src/components/AABBCollider.cpp" />
+		<Unit filename="src/components/AABBCollider.h" />
+		<Unit filename="src/components/CollisionComponent.h" />
 		<Unit filename="src/components/MeshRenderer.cpp" />
 		<Unit filename="src/components/MeshRenderer.h" />
 		<Unit filename="src/components/ScriptComponent.cpp" />
@@ -75,6 +78,18 @@
 		<Unit filename="src/luaEX.cpp" />
 		<Unit filename="src/luaEX.h" />
 		<Unit filename="src/main.cpp" />
+		<Unit filename="src/scriptFunctions/L_aabb.cpp" />
+		<Unit filename="src/scriptFunctions/L_camera.cpp" />
+		<Unit filename="src/scriptFunctions/L_entity.cpp" />
+		<Unit filename="src/scriptFunctions/L_input.cpp" />
+		<Unit filename="src/scriptFunctions/L_material.cpp" />
+		<Unit filename="src/scriptFunctions/L_quat.cpp" />
+		<Unit filename="src/scriptFunctions/L_sphere.cpp" />
+		<Unit filename="src/scriptFunctions/L_transform.cpp" />
+		<Unit filename="src/scriptFunctions/L_vec3.cpp" />
+		<Unit filename="src/scriptFunctions/LuaScripts.h" />
+		<Unit filename="src/scriptFunctions/P_collider.cpp" />
+		<Unit filename="src/scriptFunctions/P_collision.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

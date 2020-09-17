@@ -12,6 +12,7 @@ namespace myth
         MeshRenderer,
         Script,
         SphereCollider,
+        AABBCollider,
         Size
     };
 
