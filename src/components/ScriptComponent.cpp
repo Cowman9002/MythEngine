@@ -25,4 +25,10 @@ namespace myth
         m_script_engine->setCurrentEntity(getEntity());
         m_script_engine->callParameterlessMethod(getEntity()->getId(), m_script_name, "update");
     }
+
+    void ScriptComponent::fixedUpdate()
+    {
+        m_script_engine->setCurrentEntity(getEntity());
+        m_script_engine->callParameterlessMethod(getEntity()->getId(), m_script_name, "fixedUpdate");
+    }
 }

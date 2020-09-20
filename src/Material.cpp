@@ -66,6 +66,9 @@ namespace myth
             case UniformType::ModelMat:
                 dgn::Shader::uniform(m.first, transform.getTransformation());
                 break;
+            case UniformType::CamPos:
+                dgn::Shader::uniform(m.first, camera.position);
+                break;
             case UniformType::Vec3:
                 dgn::Shader::uniform(m.first, u_vec3[m.first]);
                 break;

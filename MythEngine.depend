@@ -1,7 +1,6 @@
 # depslib dependency file v1.0
-1600344373 source:c:\dev\cpp\mythengine\src\main.cpp
+1600608193 source:c:\dev\cpp\mythengine\src\main.cpp
 	"CoreEngine.h"
-	"ScriptEngine.h"
 
 1599741192 c:\dev\cpp\mythengine\include\dragonengine\dragon.h
 	"Camera.h"
@@ -35,7 +34,7 @@
 1599402428 c:\dev\cpp\mythengine\include\dragonengine\input.h
 	<array>
 
-1599515154 c:\dev\cpp\mythengine\include\dragonengine\mesh.h
+1600381684 c:\dev\cpp\mythengine\include\dragonengine\mesh.h
 	<vector>
 	<string>
 
@@ -75,13 +74,13 @@
 	<m3d/quat.h>
 	<m3d/mat4x4.h>
 
-1600342897 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
+1600529022 source:c:\dev\cpp\mythengine\src\resourcemanager.cpp
 	"ResourceManager.h"
 	<fstream>
 	<iostream>
 	<sstream>
 
-1600290978 c:\dev\cpp\mythengine\src\resourcemanager.h
+1600384301 c:\dev\cpp\mythengine\src\resourcemanager.h
 	<DragonEngine/Mesh.h>
 	<DragonEngine/Texture.h>
 	<DragonEngine/Shader.h>
@@ -118,14 +117,14 @@
 
 1598798176 c:\dev\cpp\mythengine\include\m3d\vec4.h
 
-1600291713 source:c:\dev\cpp\mythengine\src\material.cpp
+1600549231 source:c:\dev\cpp\mythengine\src\material.cpp
 	"Material.h"
 	<DragonEngine/Renderer.h>
 	<DragonEngine/Camera.h>
 	"Transform.h"
 	"ResourceManager.h"
 
-1600291694 c:\dev\cpp\mythengine\src\material.h
+1600547949 c:\dev\cpp\mythengine\src\material.h
 	<unordered_map>
 	<m3d/vec3.h>
 	<DragonEngine/Renderer.h>
@@ -133,7 +132,7 @@
 1600202137 c:\dev\cpp\mythengine\src\transform.h
 	<m3d/m3d.h>
 
-1600291100 source:c:\dev\cpp\mythengine\src\renderingengine.cpp
+1600549828 source:c:\dev\cpp\mythengine\src\renderingengine.cpp
 	"RenderingEngine.h"
 	"ResourceManager.h"
 	<DragonEngine/Renderer.h>
@@ -146,7 +145,7 @@
 	<DragonEngine/Camera.h>
 	<DragonEngine/Renderer.h>
 
-1600290942 source:c:\dev\cpp\mythengine\src\coreengine.cpp
+1600607586 source:c:\dev\cpp\mythengine\src\coreengine.cpp
 	"CoreEngine.h"
 	<DragonEngine/ErrorString.h>
 	"components/MeshRenderer.h"
@@ -167,7 +166,7 @@
 1600168222 source:c:\dev\cpp\mythengine\src\entitycomponent.cpp
 	"EntityComponent.h"
 
-1600343894 c:\dev\cpp\mythengine\src\entitycomponent.h
+1600516079 c:\dev\cpp\mythengine\src\entitycomponent.h
 	<vector>
 	<unordered_map>
 	"Transform.h"
@@ -205,14 +204,14 @@
 	<stdio.h>
 	"lua.h"
 
-1600347248 source:c:\dev\cpp\mythengine\src\scriptengine.cpp
+1600607911 source:c:\dev\cpp\mythengine\src\scriptengine.cpp
 	"ScriptEngine.h"
 	"luaEX.h"
 	"scriptFunctions/LuaScripts.h"
 	<m3d/m3d.h>
 	<DragonEngine/Camera.h>
 
-1600347072 c:\dev\cpp\mythengine\src\scriptengine.h
+1600607876 c:\dev\cpp\mythengine\src\scriptengine.h
 	<lua/lua.hpp>
 	<string>
 	<vector>
@@ -220,12 +219,12 @@
 	"RenderingEngine.h"
 	"ResourceManager.h"
 
-1600115803 c:\dev\cpp\mythengine\src\components\scriptcomponent.h
+1600390679 c:\dev\cpp\mythengine\src\components\scriptcomponent.h
 	"../EntityComponent.h"
 	"../ScriptEngine.h"
 	<string>
 
-1600117103 source:c:\dev\cpp\mythengine\src\components\scriptcomponent.cpp
+1600390662 source:c:\dev\cpp\mythengine\src\components\scriptcomponent.cpp
 	"ScriptComponent.h"
 
 1600285314 c:\dev\cpp\mythengine\src\sceneloader.h
@@ -235,13 +234,14 @@
 	"RenderingEngine.h"
 	"PhysicsEngine.h"
 
-1600346713 source:c:\dev\cpp\mythengine\src\sceneloader.cpp
+1600606416 source:c:\dev\cpp\mythengine\src\sceneloader.cpp
 	"SceneLoader.h"
 	<fstream>
 	<iostream>
 	<sstream>
 	"components/MeshRenderer.h"
 	"components/ScriptComponent.h"
+	"components/RigidBody.h"
 	"components/SphereCollider.h"
 	"components/AABBCollider.h"
 
@@ -253,31 +253,37 @@
 	<m3d/vec3.h>
 	<TigerEngine/Sphere.h>
 
-1599275845 c:\dev\cpp\mythengine\include\tigerengine\sphere.h
+1600453072 c:\dev\cpp\mythengine\include\tigerengine\sphere.h
 	"Collider.h"
 	<vector>
 
-1600345335 c:\dev\cpp\mythengine\include\tigerengine\collider.h
+1600455776 c:\dev\cpp\mythengine\include\tigerengine\collider.h
 	<m3d/vec3.h>
+	<vector>
 
-1600347788 c:\dev\cpp\mythengine\src\physicsengine.h
+1600606856 c:\dev\cpp\mythengine\src\physicsengine.h
 	"components/CollisionComponent.h"
-	<lua/lua.hpp>
+	"components/RigidBody.h"
+	<TigerEngine/Collider.h>
 	<vector>
 	<string>
 
-1600347424 source:c:\dev\cpp\mythengine\src\physicsengine.cpp
+1600607273 source:c:\dev\cpp\mythengine\src\physicsengine.cpp
 	"PhysicsEngine.h"
 	"luaEX.h"
 	"scriptFunctions/LuaScripts.h"
 	"RenderingEngine.h"
 	"ResourceManager.h"
+	"components/MeshCollider.h"
 	<TigerEngine/Sphere.h>
 	<TigerEngine/AABB.h>
+	<TigerEngine/Triangle.h>
 	<stdio.h>
+	<cmath>
 
-1600287794 c:\dev\cpp\mythengine\src\luaex.h
+1600606895 c:\dev\cpp\mythengine\src\luaex.h
 	<string>
+	<lua/lua.hpp>
 
 1600287787 source:c:\dev\cpp\mythengine\src\luaex.cpp
 	<lua/lua.hpp>
@@ -287,7 +293,7 @@
 	"../ScriptEngine.h"
 	"../luaEX.h"
 
-1600342013 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_input.cpp
+1600523221 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_input.cpp
 	"../ScriptEngine.h"
 	"../luaEX.h"
 
@@ -295,30 +301,32 @@
 	"../ScriptEngine.h"
 	"../luaEX.h"
 
-1600342122 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_quat.cpp
-	"../ScriptEngine.h"
+1600607816 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_quat.cpp
+	"luaScripts.h"
 	"../luaEX.h"
+	<m3d/m3d.h>
 
-1600343882 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_entity.cpp
+1600522706 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_entity.cpp
 	"../ScriptEngine.h"
 	"../luaEX.h"
 	"../EntityComponent.h"
 	"../Transform.h"
 	"../components/SphereCollider.h"
 	"../components/AABBCollider.h"
+	"../components/RigidBody.h"
 
 1600343816 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_sphere.cpp
 	"../ScriptEngine.h"
 	"../luaEX.h"
 	"../components/SphereCollider.h"
 
-1600341740 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_transform.cpp
-	"../ScriptEngine.h"
+1600607998 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_transform.cpp
+	"LuaScripts.h"
 	"../luaEX.h"
 	"../EntityComponent.h"
 	"../Transform.h"
 
-1600347345 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_vec3.cpp
+1600556313 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_vec3.cpp
 	"LuaScripts.h"
 	"../luaEX.h"
 	<m3d/vec3.h>
@@ -331,7 +339,7 @@
 	<m3d/vec3.h>
 	<TigerEngine/AABB.h>
 
-1599327857 c:\dev\cpp\mythengine\include\tigerengine\aabb.h
+1600452732 c:\dev\cpp\mythengine\include\tigerengine\aabb.h
 	"Collider.h"
 	<vector>
 
@@ -340,7 +348,7 @@
 	"../luaEX.h"
 	"../components/AABBCollider.h"
 
-1600347801 source:c:\dev\cpp\mythengine\src\scriptfunctions\p_collision.cpp
+1600453738 source:c:\dev\cpp\mythengine\src\scriptfunctions\p_collision.cpp
 	"../PhysicsEngine.h"
 	"../luaEX.h"
 
@@ -348,10 +356,37 @@
 	"../EntityComponent.h"
 	<TigerEngine/Collider.h>
 
-1600347826 source:c:\dev\cpp\mythengine\src\scriptfunctions\p_collider.cpp
+1600554913 source:c:\dev\cpp\mythengine\src\scriptfunctions\p_collider.cpp
+	"../PhysicsEngine.h"
+	"../luaEX.h"
+	<TigerEngine/Collider.h>
+
+1600607898 c:\dev\cpp\mythengine\src\scriptfunctions\luascripts.h
+	<lua/lua.hpp>
+
+1600518232 c:\dev\cpp\mythengine\src\components\meshcollider.h
+
+1600392842 c:\dev\cpp\mythengine\include\tigerengine\mesh.h
+	"Triangle.h"
+	<vector>
+
+1600452735 c:\dev\cpp\mythengine\include\tigerengine\triangle.h
+	"Collider.h"
+
+1600518226 source:c:\dev\cpp\mythengine\src\components\meshcollider.cpp
+
+1600394068 source:c:\dev\cpp\mythengine\src\scriptfunctions\p_manifold.cpp
 	"../PhysicsEngine.h"
 	"../luaEX.h"
 
-1600347235 c:\dev\cpp\mythengine\src\scriptfunctions\luascripts.h
-	<lua/lua.hpp>
+1600516121 source:c:\dev\cpp\mythengine\src\components\rigidbody.cpp
+
+1600606410 c:\dev\cpp\mythengine\src\components\rigidbody.h
+	"../EntityComponent.h"
+	<m3d/vec3.h>
+
+1600552623 source:c:\dev\cpp\mythengine\src\scriptfunctions\l_rigidbody.cpp
+	"LuaScripts.h"
+	"../LuaEX.h"
+	"../Components/RigidBody.h"
 

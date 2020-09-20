@@ -1,23 +1,25 @@
-#include "../ScriptEngine.h"
+#include "luaScripts.h"
 #include "../luaEX.h"
+
+#include <m3d/m3d.h>
 
 namespace myth
 {
-    void ScriptEngine::quat_openlibs()
+    void l_quat_openlibs(lua_State *L)
     {
         luaL_Reg quatObject[] =
         {
-            {"angleAxis", s_quat_angleaxis},
-            {"getRight", s_quat_getright},
-            {"getUp", s_quat_getup},
-            {"getForward", s_quat_getforward},
-            {"getLeft", s_quat_getleft},
-            {"getDown", s_quat_getdown},
-            {"getBack", s_quat_getback},
-            {"rotate", s_quat_rotate},
-            {"mul", s_quat_mul},
-            {"lookat", s_quat_lookat},
-            {"slerp", s_quat_slerp},
+            {"angleAxis", l_quat_angleaxis},
+            {"getRight", l_quat_getright},
+            {"getUp", l_quat_getup},
+            {"getForward", l_quat_getforward},
+            {"getLeft", l_quat_getleft},
+            {"getDown", l_quat_getdown},
+            {"getBack", l_quat_getback},
+            {"rotate", l_quat_rotate},
+            {"mul", l_quat_mul},
+            {"lookat", l_quat_lookat},
+            {"slerp", l_quat_slerp},
             {nullptr, nullptr}
         };
 
@@ -34,7 +36,7 @@ namespace myth
         lua_setglobal(L, "Quat");
     }
 
-    int ScriptEngine::s_quat_angleaxis(lua_State *L)
+    int l_quat_angleaxis(lua_State *L)
     {
         if(!lua_argcount(L, 2)) return 0;
 
@@ -58,7 +60,7 @@ namespace myth
         return 1;
     }
 
-    int ScriptEngine::s_quat_getright(lua_State *L)
+    int l_quat_getright(lua_State *L)
     {
         if(!lua_argcount(L, 1)) return 0;
 
@@ -79,7 +81,7 @@ namespace myth
         return 1;
     }
 
-    int ScriptEngine::s_quat_getup(lua_State *L)
+    int l_quat_getup(lua_State *L)
     {
         if(!lua_argcount(L, 1)) return 0;
 
@@ -100,7 +102,7 @@ namespace myth
         return 1;
     }
 
-    int ScriptEngine::s_quat_getforward(lua_State *L)
+    int l_quat_getforward(lua_State *L)
     {
         if(!lua_argcount(L, 1)) return 0;
 
@@ -121,7 +123,7 @@ namespace myth
         return 1;
     }
 
-    int ScriptEngine::s_quat_getleft(lua_State *L)
+    int l_quat_getleft(lua_State *L)
     {
         if(!lua_argcount(L, 1)) return 0;
 
@@ -142,7 +144,7 @@ namespace myth
         return 1;
     }
 
-    int ScriptEngine::s_quat_getdown(lua_State *L)
+    int l_quat_getdown(lua_State *L)
     {
         if(!lua_argcount(L, 1)) return 0;
 
@@ -163,7 +165,7 @@ namespace myth
         return 1;
     }
 
-    int ScriptEngine::s_quat_getback(lua_State *L)
+    int l_quat_getback(lua_State *L)
     {
         if(!lua_argcount(L, 1)) return 0;
 
@@ -184,7 +186,7 @@ namespace myth
         return 1;
     }
 
-    int ScriptEngine::s_quat_rotate(lua_State *L)
+    int l_quat_rotate(lua_State *L)
     {
         if(!lua_argcount(L, 2)) return 0;
 
@@ -209,7 +211,7 @@ namespace myth
         return 1;
     }
 
-    int ScriptEngine::s_quat_mul(lua_State *L)
+    int l_quat_mul(lua_State *L)
     {
         if(!lua_argcount(L, 2)) return 0;
 
@@ -234,7 +236,7 @@ namespace myth
         return 1;
     }
 
-    int ScriptEngine::s_quat_lookat(lua_State *L)
+    int l_quat_lookat(lua_State *L)
     {
         if(!lua_argcount(L, 3)) return 0;
 
@@ -263,7 +265,7 @@ namespace myth
         return 1;
     }
 
-    int ScriptEngine::s_quat_slerp(lua_State *L)
+    int l_quat_slerp(lua_State *L)
     {
         if(!lua_argcount(L, 3)) return 0;
 

@@ -1,5 +1,12 @@
-shader:textured_lit
+shader:pbr_lite_shader
 uniformc:uMVP;MVPMat
-uniformc:uM;ModelMat
-uniformv3:uColorMix;1.0;1.0;1.0
-texture:wood_texture;0
+uniformc:uModelMat;ModelMat
+uniformc:uCamPos;CamPos
+uniformi:uTexture;0
+uniformi:uRough;1
+uniformi:uMetalness;2
+uniformi:uNorm;3
+texture:wood_color_texture;0
+texture:wood_rough_texture;1
+texture:black_texture;2
+texture:wood_normal_texture;3

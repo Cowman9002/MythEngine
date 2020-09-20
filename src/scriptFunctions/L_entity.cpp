@@ -5,6 +5,7 @@
 #include "../Transform.h"
 #include "../components/SphereCollider.h"
 #include "../components/AABBCollider.h"
+#include "../components/RigidBody.h"
 
 namespace myth
 {
@@ -14,6 +15,7 @@ namespace myth
         {
             {"getSelf", s_entity_getself},
             {"getTransform", s_entity_gettransform},
+            {"getRigidBody", s_entity_getrigidbody},
             {"getSphere", s_entity_getsphere},
             {"getAABB", s_entity_getaabb},
             {nullptr, nullptr}
@@ -67,6 +69,26 @@ namespace myth
         lua_setmetatable(L, -2);
 
         *b = &a->transform;
+
+        return 1;
+    }
+
+    int ScriptEngine::s_entity_getrigidbody(lua_State *L)
+    {
+        if(!lua_argcount(L, 1)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.entity");
+        luaL_argcheck(L, ud != NULL, 1, "`entity' expected");
+
+        Entity *a = *(Entity**)ud;
+
+        size_t nbytes = sizeof(RigidBody*);
+        RigidBody **b = (RigidBody**)lua_newuserdata(L, nbytes);
+
+        luaL_getmetatable(L, "Myth.rigidbody");
+        lua_setmetatable(L, -2);
+
+        *b = (RigidBody*)a->getComponent(ComponentType::RigidBody);
 
         return 1;
     }

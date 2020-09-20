@@ -6,73 +6,152 @@
 #include "RenderingEngine.h"
 #include "ResourceManager.h"
 
+#include "components/MeshCollider.h"
+
 #include <TigerEngine/Sphere.h>
 #include <TigerEngine/AABB.h>
+#include <TigerEngine/Triangle.h>
 
 #include <stdio.h>
+#include <cmath>
 
 namespace myth
 {
-    bool PhysicsEngine::initialze(const std::string& filepath)
+    bool PhysicsEngine::initialze(float delta)
     {
-        L = luaL_newstate();
-        luaL_openlibs(L);
-
-        l_vec3_openlibs(L);
-        collider_loadlibs();
-        collision_loadlibs();
-
-        // load simulation file into state
-        lua_runfile(L, filepath);
+        m_delta = delta;
 
         return true;
     }
 
     void PhysicsEngine::terminate()
     {
-        lua_settop(L, 0);
-        lua_close(L);
     }
 
     void PhysicsEngine::simulate()
     {
-        unsigned k = m_colliders.size();
+        // rigid body stuffs
+        for(RigidBody *body : m_rigidbodies)
+        {
+            if(!body->isStatic())
+            {
+                body->getEntity()->transform.pos += body->velocity * m_delta;
+                body->velocity = m3d::vec3::lerp(body->velocity, m3d::vec3(), body->damping);
+                if(m3d::vec3::distanceSqr(body->velocity, m3d::vec3()) < 0.01f)
+                {
+                    body->velocity = m3d::vec3(0.0f);
+                }
+
+                if(body->useGravity())
+                {
+                    body->velocity += m_gravity * m_delta;
+                }
+            }
+        }
+
+        // COllision
+        unsigned k = m_bodies.size();
         for(unsigned i = 0; i < k; i++)
         {
             for(unsigned j = i+1; j < k; j++)
             {
-                // get function from lua state
-                lua_getglobal(L, "simulate");
-                if(lua_isfunction(L, -1))
+                PhysicsBody a = m_bodies[i];
+                PhysicsBody b = m_bodies[j];
+
+                if(a.entity == b.entity) continue;
+
+                tgr::Collision collision = a.collider->checkCollision(b.collider);
+
+                if(collision.hit)
                 {
-                    // push parameters
+                    m3d::vec3 velocityA = m3d::vec3();
+                    m3d::vec3 velocityB = m3d::vec3();
 
-                    size_t nbytes = sizeof(tgr::Collider*);
-                    CollisionComponent **a = (CollisionComponent**)lua_newuserdata(L, nbytes);
-                    luaL_getmetatable(L, "Myth.collider");
-                    lua_setmetatable(L, -2);
+                    float massA = 0.0f;
+                    float massB = 0.0f;
 
-                    CollisionComponent **b = (CollisionComponent**)lua_newuserdata(L, nbytes);
-                    luaL_getmetatable(L, "Myth.collider");
-                    lua_setmetatable(L, -2);
+                    float bounceA = 0.0f;
+                    float bounceB = 0.0f;
 
-                    *a = m_colliders.at(i);
-                    *b = m_colliders.at(j);
+                    m3d::vec2 frictionA = m3d::vec2(0.0f);
+                    m3d::vec2 frictionB = m3d::vec2(0.0f);
 
-                    // call method
-                    if(lua_pcall(L, 2, 0, 0) != LUA_OK)
+                    if(a.body != nullptr)
                     {
-                        print_error(L);
-                        return;
+                        velocityA = a.body->velocity;
+                        bounceA = a.body->bounce;
+                        frictionA = a.body->friction;
+                        if(a.body->mass != 0.0f)
+                        {
+                            massA = 1.0f / a.body->mass;
+                        }
                     }
+                    if(b.body)
+                    {
+                        velocityB = b.body->velocity;
+                        bounceB = b.body->bounce;
+                        frictionB = b.body->friction;
+                        if(b.body->mass != 0.0f)
+                        {
+                            massB = 1.0f / b.body->mass;
+                        }
+                    }
+
+                    m3d::vec3 velocity = velocityB - velocityA;
+                    float velOnorm = collision.normal.dot(velocity);
+
+                    if(velOnorm >= 0)
+                    {
+                        float e = (bounceA + bounceB) * 0.5f;
+
+                        float j = -(1 + e) * velOnorm;
+                        j /= massA + massB;
+                        m3d::vec3 impulse = collision.normal * j;
+
+                        velocityA -= impulse * massA;
+                        velocityB += impulse * massB;
+
+                        m3d::vec3 tangent = (velocity - collision.normal * velocity.dot(collision.normal)).normalized();
+
+                        float jt = velocity.dot(tangent);
+                        jt /= massA + massB;
+                        float mu = std::sqrt(frictionA.x * frictionA.x +
+                                             frictionB.x * frictionB.x);
+                        m3d::vec3 fimpulse = m3d::vec3();
+
+                        if(std::abs(jt) < j * mu)
+                        {
+                            fimpulse = tangent * jt;
+                        }
+                        else
+                        {
+                            float dmu = std::sqrt(frictionA.y * frictionA.y +
+                                                    frictionB.y * frictionB.y);
+                            fimpulse = tangent * -jt * dmu;
+                        }
+
+                        velocityA -= fimpulse * massA;
+                        velocityB += fimpulse * massB;
+
+                        if(a.body != nullptr)
+                        {
+                            a.body->velocity = velocityA;
+                        }
+                        if(b.body)
+                        {
+                            b.body->velocity = velocityB;
+                        }
+                    }
+
+                    float percent = 0.8; // .2 to .8
+                    float slop = 0.02; // 0.01 to 0.1
+
+                    m3d::vec3 correction = collision.normal * (std::max(collision.penetration - slop, 0.0f) / (massA + massB) * percent);
+                    a.entity->transform.pos += correction * massA;
+                    b.entity->transform.pos -= correction * massB;
                 }
             }
         }
-    }
-
-    void PhysicsEngine::addCollider(CollisionComponent* col)
-    {
-        m_colliders.push_back(col);
     }
 
     const float sphere_subdivisions = 16;
@@ -80,43 +159,66 @@ namespace myth
 
     void PhysicsEngine::render(RenderingEngine& render, const ResourceManager& resources)
     {
-        for(CollisionComponent *collider : m_colliders)
+        for(const PhysicsBody& body : m_bodies)
         {
-            tgr::Collider *col = collider->getNativeCollider();
+            // Mesh collider
 
-            if(col->getType() == tgr::ColliderType::Sphere)
+            /*if(collider->getType() == ComponentType::MeshCollider)
             {
-                tgr::Sphere *sphere = (tgr::Sphere*)col;
-
-                Transform t;
-                t.pos = sphere->getCenter();
-                t.scale = m3d::vec3(sphere->getRadius());
+                MeshCollider *m = (MeshCollider*)collider;
 
                 RenderObject ro;
 
-                ro.material = resources.getIndex("debug_wire_mat");
-                ro.model = resources.getIndex("debug_wire_sphere");
+                ro.material = resources.getIndex("debugmesh_mat");
+                ro.model = m->getModelIndex();
                 ro.sub_mesh = 0;
-                ro.transform = t;
 
                 render.add(ro);
-            }
-            else if(col->getType() == tgr::ColliderType::AABB)
+                continue;
+            }*/
+
+            tgr::Collider *col = body.collider;
+
+            switch(col->getType())
             {
-                tgr::AABB *aabb = (tgr::AABB*)col;
+                case tgr::ColliderType::Sphere:
+                {
+                    tgr::Sphere *sphere = (tgr::Sphere*)col;
 
-                Transform t;
-                t.pos = aabb->getCenter();
-                t.scale = m3d::vec3(aabb->getExtents());
+                    Transform t;
+                    t.pos = sphere->getCenter();
+                    t.scale = m3d::vec3(sphere->getRadius());
 
-                RenderObject ro;
+                    RenderObject ro;
 
-                ro.material = resources.getIndex("debug_wire_mat");
-                ro.model = resources.getIndex("debug_wire_cube");
-                ro.sub_mesh = 0;
-                ro.transform = t;
+                    ro.material = resources.getIndex("debug_wire_mat");
+                    ro.model = resources.getIndex("debug_wire_sphere");
+                    ro.sub_mesh = 0;
+                    ro.transform = t;
 
-                render.add(ro);
+                    render.add(ro);
+                    break;
+                }
+                case tgr::ColliderType::AABB:
+                {
+                    tgr::AABB *aabb = (tgr::AABB*)col;
+
+                    Transform t;
+                    t.pos = aabb->getCenter();
+                    t.scale = m3d::vec3(aabb->getExtents());
+
+                    RenderObject ro;
+
+                    ro.material = resources.getIndex("debug_wire_mat");
+                    ro.model = resources.getIndex("debug_wire_cube");
+                    ro.sub_mesh = 0;
+                    ro.transform = t;
+
+                    render.add(ro);
+                    break;
+                }
+                default:
+                break;
             }
         }
     }

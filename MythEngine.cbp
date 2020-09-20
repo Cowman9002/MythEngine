@@ -67,8 +67,12 @@
 		<Unit filename="src/components/AABBCollider.cpp" />
 		<Unit filename="src/components/AABBCollider.h" />
 		<Unit filename="src/components/CollisionComponent.h" />
+		<Unit filename="src/components/MeshCollider.cpp" />
+		<Unit filename="src/components/MeshCollider.h" />
 		<Unit filename="src/components/MeshRenderer.cpp" />
 		<Unit filename="src/components/MeshRenderer.h" />
+		<Unit filename="src/components/RigidBody.cpp" />
+		<Unit filename="src/components/RigidBody.h" />
 		<Unit filename="src/components/ScriptComponent.cpp" />
 		<Unit filename="src/components/ScriptComponent.h" />
 		<Unit filename="src/components/SphereCollider.cpp" />
@@ -84,12 +88,11 @@
 		<Unit filename="src/scriptFunctions/L_input.cpp" />
 		<Unit filename="src/scriptFunctions/L_material.cpp" />
 		<Unit filename="src/scriptFunctions/L_quat.cpp" />
+		<Unit filename="src/scriptFunctions/L_rigidbody.cpp" />
 		<Unit filename="src/scriptFunctions/L_sphere.cpp" />
 		<Unit filename="src/scriptFunctions/L_transform.cpp" />
 		<Unit filename="src/scriptFunctions/L_vec3.cpp" />
 		<Unit filename="src/scriptFunctions/LuaScripts.h" />
-		<Unit filename="src/scriptFunctions/P_collider.cpp" />
-		<Unit filename="src/scriptFunctions/P_collision.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

@@ -58,6 +58,8 @@ namespace myth
         unsigned loadShader(const ShaderData& data);
         unsigned loadMaterial(const MaterialData& data);
 
+        unsigned createModel(const std::vector<float>& vertices, const std::vector<unsigned> indices, const std::string& name);
+
         unsigned addMaterial(const Material& material, const std::string& name);
 
         dgn::Model *getModel(const unsigned& index);

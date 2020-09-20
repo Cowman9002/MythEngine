@@ -20,6 +20,7 @@ namespace myth
             {"sub", l_vec3_sub},
             {"mul", l_vec3_mul},
             {"div", l_vec3_div},
+            {"dot", l_vec3_dot},
             {"down", l_vec3_down},
             {"up", l_vec3_up},
             {"right", l_vec3_right},
@@ -31,6 +32,8 @@ namespace myth
             {"slerp", l_vec3_slerp},
             {"distSqr", l_vec3_distancesqr},
             {"dist", l_vec3_distance},
+            {"reflection", l_vec3_reflection},
+            {"equals", l_vec3_equals},
             {nullptr, nullptr}
         };
 
@@ -219,7 +222,7 @@ namespace myth
 
         m3d::vec3 c;
 
-        if(lua_isnumber(L, 2)) // adding number
+        if(lua_isnumber(L, 2)) // subtracting number
         {
             float b = lua_tonumber(L, 2);
             c = m3d::vec3::sub(*a, b);
@@ -238,9 +241,7 @@ namespace myth
         luaL_getmetatable(L, "Myth.vec3");
         lua_setmetatable(L, -2);
 
-        d->x = c.x;
-        d->y = c.y;
-        d->z = c.z;
+        *d = c;
 
         return 1;
     }
@@ -292,6 +293,23 @@ namespace myth
         d->x = c.x;
         d->y = c.y;
         d->z = c.z;
+
+        return 1;
+    }
+
+    int l_vec3_dot(lua_State *L)
+    {
+        if(!lua_argcount(L, 2)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 1, "`vec3' expected");
+        m3d::vec3 *a = (m3d::vec3*)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 2, "`vec3' expected");
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        lua_pushnumber(L, a->dot(*b));
 
         return 1;
     }
@@ -428,7 +446,6 @@ namespace myth
 
         size_t nbytes = sizeof(m3d::vec3);
         m3d::vec3 *d = (m3d::vec3*)lua_newuserdata(L, nbytes);
-
         luaL_getmetatable(L, "Myth.vec3");
         lua_setmetatable(L, -2);
 
@@ -496,6 +513,47 @@ namespace myth
         m3d::vec3 *b = (m3d::vec3*)ud;
 
         lua_pushnumber(L, m3d::vec3::distance(*a, *b));
+
+        return 1;
+    }
+
+    int l_vec3_reflection(lua_State *L)
+    {
+        if(!lua_argcount(L, 2)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 1, "`vec3' expected");
+        m3d::vec3 *a = (m3d::vec3*)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 2, "`vec3' expected");
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        m3d::vec3 c = m3d::vec3::reflect(*a, *b);
+
+        size_t nbytes = sizeof(m3d::vec3);
+        m3d::vec3 *d = (m3d::vec3*)lua_newuserdata(L, nbytes);
+        luaL_getmetatable(L, "Myth.vec3");
+        lua_setmetatable(L, -2);
+
+        *d = c;
+
+        return 1;
+    }
+
+    int l_vec3_equals(lua_State *L)
+    {
+        if(!lua_argcount(L, 2)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 1, "`vec3' expected");
+        m3d::vec3 *a = (m3d::vec3*)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 2, "`vec3' expected");
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        lua_pushboolean(L, *a == *b);
 
         return 1;
     }

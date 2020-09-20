@@ -2,6 +2,8 @@
 
 #include <m3d/vec3.h>
 
+#include <vector>
+
 namespace tgr
 {
     enum class ColliderType
@@ -20,6 +22,7 @@ namespace tgr
     struct Collision
     {
         bool hit = false;
+        m3d::vec3 point = m3d::vec3();
         float penetration = 0;
         m3d::vec3 normal = m3d::vec3();
     };
@@ -40,6 +43,12 @@ namespace tgr
 
     };
 }
+
+/*
+    Collision information from
+    https://gdbooks.gitbooks.io/3dcollisions/content/
+
+*/
 
 
 /*
@@ -75,6 +84,15 @@ namespace tgr
         case ColliderType::Capsule:
             {
                 Capsule *b = (Capsule*)other;
+                break;
+            }
+        case ColliderType::Mesh:
+            {
+                Mesh *b = (Mesh*)other;
+
+                res = b->checkCollision(this);
+                res.normal *= -1;
+
                 break;
             }
         case ColliderType::Point:

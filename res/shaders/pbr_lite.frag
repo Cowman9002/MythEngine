@@ -1,42 +1,22 @@
 #version 330 core
 
-#include src/std/pbr.glh
-#include src/std/shadows.glh
+#include std/pbr.glh
 
-layout(location = 0) out vec3 fragColor;
-
-econst int CASCADES;
+layout(location = 0) out vec4 fragColor;
 
 varying vec2 vCoords;
 varying vec3 vNorm;
 varying vec3 vFragPos;
-varying vec4 vLightPos[CASCADES];
 varying mat3 vTBN;
 
-uniform samplerCube uSkybox;
-uniform sampler2D uIrrad[2];
-uniform sampler2D uShadowMap[CASCADES];
 uniform sampler2D uTexture;
 uniform sampler2D uRough;
 uniform sampler2D uMetalness;
 uniform sampler2D uNorm;
-uniform sampler2D uAO;
 uniform vec3 uCamPos;
 
-uniform float uCascadeDepths[CASCADES];
-varying float vFragDist;
-
 const vec3 L = normalize(vec3(-1.0, 1.0, 1.0));
-const vec3 Radiance = vec3(1, 0.9, 0.8) * 4.0;
-//const vec3 Radiance = vec3(1, 1.0, 1.0) * 0.2;
-
-const vec3 cascade_colors[] =
-{
-	vec3(1.0, 0.0, 0.0),
-	vec3(0.0, 1.0, 0.0),
-	vec3(0.0, 0.0, 1.0),
-	vec3(1.0, 1.0, 1.0)
-};
+const vec3 Radiance = vec3(1, 0.9, 0.6) * 2.0;
 
 void main()
 {
@@ -44,8 +24,6 @@ void main()
 	float alpha = roughness * roughness;
 
 	float metalness = texture2D(uMetalness, vCoords).r;
-
-	float ao = texture2D(uAO, vCoords).r;
 
 	vec3 normal = texture2D(uNorm, vCoords).rgb;
 	vec3 N = normal * 2.0 - 1.0;
@@ -63,17 +41,9 @@ void main()
 	float LoH = max(0.0, dot(L, H));
 	
 	vec3 main_color = texture2D(uTexture, vCoords).rgb;
-	//main_color = vec3(.89, 0.80, 0.1);
 	
-	vec3 reflection = textureLod(uSkybox, R, roughness * 5).rgb;
-	
-	vec2 irrad_sampling = N.xz;
-	float y_off = sign(N.y);
-	float m = 2 * sqrt(N.x * N.x + N.z * N.z + (N.y + y_off) * (N.y + y_off));
-	irrad_sampling /= m;
-	irrad_sampling += 0.5;
-	int irrad_map_index = int(floor(y_off * 0.5 + 0.5));
-	vec3 irrad = texture2D(uIrrad[irrad_map_index], irrad_sampling).rgb;
+	vec3 reflection = pow(vec3(0.5, 0.5, 0.58), vec3(2.2));
+	vec3 radiance = reflection;
 	
 	vec3 F0 = vec3(0.04);
 	F0 = mix(F0, main_color, metalness);
@@ -89,9 +59,8 @@ void main()
 	vec3 specular = CookTorrance_BRDF(D, G, F, NoL, NoV);
 	vec3 diffuse = Disney_D(main_color, NoV, NoL, LoH, roughness);
 	//vec3 diffuse = Lambertian_D(main_color);
-	vec3 ambient = kD * irrad * main_color + F2 * reflection;
+	vec3 ambient = kD * radiance * main_color + F2 * reflection;
 	//vec3 ambient = kD * main_color;
-	ambient *= ao;
 	
 	vec3 lighting = vec3(0.0);
 	if(NoL > 0.0)
@@ -100,19 +69,10 @@ void main()
 		lighting *= Radiance * NoL;
 	}
 	
-	float shadow = 1.0;
+	vec3 color = ambient + lighting;
 	
-	for(int i = 0; i < CASCADES; i++)
-	{
-		if(vFragDist < uCascadeDepths[i])
-		{
-			shadow = shadowMult(uShadowMap[i], vLightPos[i], 0.003);
-			break;
-		}
-	}
+	color = pow(color, vec3(1.0 / 2.2));
 	
-	vec3 color = ambient + lighting * shadow;
-	
-	fragColor = color;
+	fragColor = vec4(color, 1.0);
 	//fragColor = vec3(irrad_sampling, 0.0);
 }

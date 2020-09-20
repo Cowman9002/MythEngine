@@ -18,7 +18,8 @@ namespace myth
         Vec3,
         Int,
         MVPMat,
-        ModelMat
+        ModelMat,
+        CamPos
     };
 
     class ResourceManager;
@@ -35,6 +36,8 @@ namespace myth
         std::unordered_map<unsigned, unsigned> u_textures;
     public:
         dgn::DrawMode drawMode = dgn::DrawMode::Triangles;
+        dgn::DepthTest depthTest = dgn::DepthTest::Less;
+        bool cullFace = true;
 
         inline void setShader(const unsigned& shader) { m_shader = shader; }
 

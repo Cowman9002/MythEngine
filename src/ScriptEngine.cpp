@@ -24,11 +24,12 @@ namespace myth
         luaL_openlibs(L);
 
         l_vec3_openlibs(L);
-        quat_openlibs();
+        l_rigidbody_openlibs(L);
+        l_quat_openlibs(L);
         material_openlibs();
         camera_openlibs();
         entity_openlibs();
-        transform_openlibs();
+        l_transform_openlibs(L);
         sphere_openlibs();
         aabb_openlibs();
         input_openlibs();

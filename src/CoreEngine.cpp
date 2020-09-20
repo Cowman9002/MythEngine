@@ -9,13 +9,15 @@
 
 namespace myth
 {
+    const float fixed_delta = 1.0f / 60.0f;
+
     bool CoreEngine::initialize(const unsigned& width, const unsigned& height)
     {
         if(!m_window.initialize(width, height, "Myth"))
         {
             return false;
         }
-        m_window.setVsync(dgn::VsyncMode::Single);
+        m_window.setVsync(dgn::VsyncMode::None);
         m_window.makeCurrent();
 
         if(!m_render.initialize(&m_window.getRenderer(), &m_resources))
@@ -26,7 +28,7 @@ namespace myth
         m_render.getCamera()->width = width;
         m_render.getCamera()->height = height;
 
-        if(!m_physics.initialze("res/scripts/physics.lua")) return false;
+        if(!m_physics.initialze(fixed_delta)) return false;
 
         if(!m_script_engine.initialize(&m_window, &m_render, &m_resources)) return false;
 
@@ -69,8 +71,13 @@ namespace myth
 
     void CoreEngine::run()
     {
-        float delta = 1.0 / 60.0;
         m_scene_graph.start();
+
+        float last = m_window.getTime();
+        float now = 0;
+        float delta = 0;
+        float fixed_timer = 0;
+        m_script_engine.setNamespaceValue("Myth", "fixedDelta", fixed_delta);
 
         while(m_run)
         {
@@ -81,16 +88,23 @@ namespace myth
                 break;
             }
 
-            //m3d::vec3 euler = m3d::quat::euler(cam->rotation);
-            //printf("%f, %f, %f\n", euler.x * TO_DEGS, euler.y * TO_DEGS, euler.z * TO_DEGS);
+            now = m_window.getTime();
+            delta = now - last;
+            last = now;
+
 
             m_script_engine.setNamespaceValue("Myth", "frame", m_window.getFrameCount());
             m_script_engine.setNamespaceValue("Myth", "delta", delta);
 
             m_scene_graph.update();
 
-            m_scene_graph.fixedUpdate();
-            m_physics.simulate();
+            fixed_timer += delta;
+            if(fixed_timer >= fixed_delta)
+            {
+                fixed_timer -= fixed_delta;
+                m_scene_graph.fixedUpdate();
+                m_physics.simulate();
+            }
 
             m_scene_graph.render(&m_render);
             m_physics.render(m_render, m_resources);

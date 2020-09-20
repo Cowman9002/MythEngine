@@ -11,6 +11,7 @@ namespace myth
             {"getKeyDown", s_input_getkeydown},
             {"getKeyUp", s_input_getkeyup},
             {"getControllerAxis", s_input_controlleraxis},
+            {"getControllerButton", s_input_getcontrollerbutton},
             {nullptr, nullptr}
         };
 
@@ -32,6 +33,10 @@ namespace myth
 
             lua_pushstring(L, "AxisRightY");
             lua_pushnumber(L, (unsigned)dgn::GamepadAxis::RightY);
+            lua_settable(L, -3);
+
+            lua_pushstring(L, "ControllerSouth");
+            lua_pushnumber(L, (unsigned)dgn::GamepadButtons::South);
             lua_settable(L, -3);
 
             lua_pushstring(L, "KeyA");
@@ -203,6 +208,21 @@ namespace myth
 
         lua_pushnumber(L, ScriptEngine::s_bound->m_window->getInput().getGamepadAxis(
                             gamepad,(dgn::GamepadAxis)axis, deadzone));
+        return 1;
+    }
+
+    int ScriptEngine::s_input_getcontrollerbutton(lua_State *L)
+    {
+        if(!lua_argcount(L, 2)) return 0;
+        luaL_argcheck(L, lua_isnumber(L, 1), 1, "`number' expected");
+        luaL_argcheck(L, lua_isnumber(L, 2), 2, "`number' expected");
+
+        unsigned gamepad = lua_tointeger(L, 1);
+        unsigned button = lua_tointeger(L, 2);
+
+        lua_pushboolean(L, ScriptEngine::s_bound->m_window->getInput().getGamepadButton(
+                                                    gamepad, (dgn::GamepadButtons)button));
+
         return 1;
     }
 }

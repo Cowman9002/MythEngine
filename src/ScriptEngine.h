@@ -37,23 +37,6 @@ namespace myth
         void setNamespaceValue(const std::string& namesp, const std::string& valueName, const double& value);
     private:
 
-        ///////////////////////////////////
-        //          QUATERNION           //
-        ///////////////////////////////////
-
-        void quat_openlibs();
-        static int s_quat_angleaxis(lua_State *L);
-        static int s_quat_getright(lua_State *L);
-        static int s_quat_getup(lua_State *L);
-        static int s_quat_getforward(lua_State *L);
-        static int s_quat_getleft(lua_State *L);
-        static int s_quat_getdown(lua_State *L);
-        static int s_quat_getback(lua_State *L);
-        static int s_quat_rotate(lua_State *L);
-        static int s_quat_mul(lua_State *L);
-        static int s_quat_lookat(lua_State *L);
-        static int s_quat_slerp(lua_State *L);
-
         ///////////////////////////////
         //          MATERIAL         //
         ///////////////////////////////
@@ -80,18 +63,9 @@ namespace myth
         void entity_openlibs();
         static int s_entity_getself(lua_State *L);
         static int s_entity_gettransform(lua_State *L);
+        static int s_entity_getrigidbody(lua_State *L);
         static int s_entity_getsphere(lua_State *L);
         static int s_entity_getaabb(lua_State *L);
-
-        //////////////////////////////////
-        //          TRANSFORM           //
-        //////////////////////////////////
-
-        void transform_openlibs();
-        static int s_transform_getpos(lua_State *L);
-        static int s_transform_setpos(lua_State *L);
-        static int s_transform_getrot(lua_State *L);
-        static int s_transform_setrot(lua_State *L);
 
         ///////////////////////////////
         //      SPHERE COLLIDER      //
@@ -122,5 +96,6 @@ namespace myth
         static int s_input_getkeydown(lua_State *L);
         static int s_input_getkeyup(lua_State *L);
         static int s_input_controlleraxis(lua_State *L);
+        static int s_input_getcontrollerbutton(lua_State *L);
     };
 }

@@ -6,6 +6,7 @@
 
 #include "components/MeshRenderer.h"
 #include "components/ScriptComponent.h"
+#include "components/RigidBody.h"
 #include "components/SphereCollider.h"
 #include "components/AABBCollider.h"
 
@@ -41,19 +42,48 @@ namespace myth
         std::string line;
         Entity *currentEntity;
         dgn::Camera *currentCamera;
+
+        std::vector<tgr::Collider*> colliders;
+        RigidBody *body;
+        bool part_of_physics = false;
+
         //unsigned camera_id = 0;
 
         unsigned inside_of = 0;
 
         while(std::getline(file, line))
         {
-            if(line.compare("Entity") == 0)
+
+            if(line.empty())
+            {
+                continue;
+            }
+
+            if(line.compare("End") == 0)
+            {
+                if(part_of_physics)
+                {
+                    for(tgr::Collider *col : colliders)
+                    {
+                        PhysicsBody phy;
+                        phy.collider = col;
+                        phy.entity = currentEntity;
+                        phy.body = body;
+                        m_physics->add(phy);
+                    }
+
+                    part_of_physics = false;
+                    body = nullptr;
+                    colliders.clear();
+                }
+            }
+            else if(line.compare("Entity") == 0)
             {
                 currentEntity = m_sceneGraph->createEntity();
                 //std::cout << currentEntity->getId() << std::endl;
                 inside_of = ENTITY;
             }
-            if(line.compare("Camera") == 0)
+            else if(line.compare("Camera") == 0)
             {
                 currentCamera = m_render->getCamera();
                 //std::cout << camera_id++ << std::endl;
@@ -192,7 +222,8 @@ namespace myth
                                                           std::stof(data_split[3])));
 
                        currentEntity->addComponent(col);
-                        m_physics->addCollider(col);
+                       colliders.push_back(col->getNativeCollider());
+                       part_of_physics = true;
                     }
                     else
                     {
@@ -212,12 +243,40 @@ namespace myth
                                               std::stof(data_split[5])));
 
                        currentEntity->addComponent(col);
-                        m_physics->addCollider(col);
+                       colliders.push_back(col->getNativeCollider());
+                       part_of_physics = true;
                     }
                     else
                     {
                         printf("Too few parameters for aabb component: %s\n", path.c_str());
                     }
+                }
+                else if(fun.compare("rigid") == 0)
+                {
+                    if(data_split.size() > 6)
+                    {
+                        RigidBody *rigid = new RigidBody();
+                        rigid->mass = std::stof(data_split[0]);
+                        rigid->damping = std::stof(data_split[1]);
+                        rigid->bounce = std::stof(data_split[2]);
+                        rigid->friction.x = std::stof(data_split[3]);
+                        rigid->friction.y = std::stof(data_split[4]);
+                        rigid->setStatic(std::stoi(data_split[5]));
+                        rigid->setUseGravity(std::stoi(data_split[6]));
+
+                        currentEntity->addComponent(rigid);
+                        m_physics->add(rigid);
+                        body = rigid;
+                        part_of_physics = true;
+                    }
+                    else
+                    {
+                        printf("Too few parameters for aabb component: %s\n", path.c_str());
+                    }
+                }
+                else
+                {
+                    printf("Unrecognized function: %s, %s\n", fun.c_str(), path.c_str());
                 }
             }
         }

@@ -18,7 +18,7 @@ namespace myth
 
         m_camera = dgn::Camera();
 
-        m_renderer->setClearColor(0.3f, 0.3f, 0.3f);
+        m_renderer->setClearColor(0.5f, 0.5f, 0.58f);
         m_renderer->enableClearFlag(dgn::ClearFlag::color);
         m_renderer->enableClearFlag(dgn::ClearFlag::depth);
         m_renderer->enableFlag(dgn::RenderFlag::DepthTest);
@@ -48,6 +48,15 @@ namespace myth
                 {
                     material->update(m_renderer, m_resources, m_camera, r.transform);
                     m_renderer->setDrawMode(material->drawMode);
+                    m_renderer->setDepthTest(material->depthTest);
+                    if(material->cullFace)
+                    {
+                        m_renderer->enableFlag(dgn::RenderFlag::CullFace);
+                    }
+                    else
+                    {
+                        m_renderer->disableFlag(dgn::RenderFlag::CullFace);
+                    }
                 }
                 m_renderer->bindMesh(model->at(r.sub_mesh));
                 m_renderer->drawBoundMesh();

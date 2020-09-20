@@ -4,6 +4,11 @@
 
 namespace myth
 {
+
+    ///////////////////////////////////
+    //            VEC3               //
+    ///////////////////////////////////
+
     void l_vec3_openlibs(lua_State *L);
     int l_vec3_new(lua_State *L);
     int l_vec3_getx(lua_State *L);
@@ -16,6 +21,7 @@ namespace myth
     int l_vec3_sub(lua_State *L);
     int l_vec3_mul(lua_State *L);
     int l_vec3_div(lua_State *L);
+    int l_vec3_dot(lua_State *L);
     int l_vec3_down(lua_State *L);
     int l_vec3_up(lua_State *L);
     int l_vec3_left(lua_State *L);
@@ -27,4 +33,43 @@ namespace myth
     int l_vec3_slerp(lua_State *L);
     int l_vec3_distancesqr(lua_State *L);
     int l_vec3_distance(lua_State *L);
+    int l_vec3_reflection(lua_State *L);
+    int l_vec3_equals(lua_State *L);
+
+    ///////////////////////////////////
+    //          QUATERNION           //
+    ///////////////////////////////////
+
+    void l_quat_openlibs(lua_State *L);
+    int l_quat_angleaxis(lua_State *L);
+    int l_quat_getright(lua_State *L);
+    int l_quat_getup(lua_State *L);
+    int l_quat_getforward(lua_State *L);
+    int l_quat_getleft(lua_State *L);
+    int l_quat_getdown(lua_State *L);
+    int l_quat_getback(lua_State *L);
+    int l_quat_rotate(lua_State *L);
+    int l_quat_mul(lua_State *L);
+    int l_quat_lookat(lua_State *L);
+    int l_quat_slerp(lua_State *L);
+
+    //////////////////////////////////
+    //          TRANSFORM           //
+    //////////////////////////////////
+
+    void l_transform_openlibs(lua_State *L);
+    int l_transform_getpos(lua_State *L);
+    int l_transform_setpos(lua_State *L);
+    int l_transform_getrot(lua_State *L);
+    int l_transform_setrot(lua_State *L);
+    int l_transform_translate(lua_State *L);
+
+    ///////////////////////////////////
+    //          RIGIDBODY            //
+    ///////////////////////////////////
+
+    void l_rigidbody_openlibs(lua_State *L);
+    int l_rigidbody_getvelocity(lua_State *L);
+    int l_rigidbody_setvelocity(lua_State *L);
+    int l_rigidbody_getmass(lua_State *L);
 }

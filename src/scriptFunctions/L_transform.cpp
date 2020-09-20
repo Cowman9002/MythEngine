@@ -1,4 +1,4 @@
-#include "../ScriptEngine.h"
+#include "LuaScripts.h"
 #include "../luaEX.h"
 
 #include "../EntityComponent.h"
@@ -6,14 +6,15 @@
 
 namespace myth
 {
-    void ScriptEngine::transform_openlibs()
+    void l_transform_openlibs(lua_State *L)
     {
         luaL_Reg transformObject[] =
         {
-            {"getPos", s_transform_getpos},
-            {"setPos", s_transform_setpos},
-            {"getRot", s_transform_getrot},
-            {"setRot", s_transform_setrot},
+            {"getPos", l_transform_getpos},
+            {"setPos", l_transform_setpos},
+            {"getRot", l_transform_getrot},
+            {"setRot", l_transform_setrot},
+            {"translate", l_transform_translate},
             {nullptr, nullptr}
         };
 
@@ -30,7 +31,7 @@ namespace myth
         lua_setglobal(L, "Transform");
     }
 
-    int ScriptEngine::s_transform_getpos(lua_State *L)
+    int l_transform_getpos(lua_State *L)
     {
         if(!lua_argcount(L, 1)) return 0;
 
@@ -50,7 +51,7 @@ namespace myth
         return 1;
     }
 
-    int ScriptEngine::s_transform_setpos(lua_State *L)
+    int l_transform_setpos(lua_State *L)
     {
         if(!lua_argcount(L, 2)) return 0;
 
@@ -69,7 +70,7 @@ namespace myth
         return 0;
     }
 
-    int ScriptEngine::s_transform_getrot(lua_State *L)
+    int l_transform_getrot(lua_State *L)
     {
         if(!lua_argcount(L, 1)) return 0;
 
@@ -89,7 +90,7 @@ namespace myth
         return 1;
     }
 
-    int ScriptEngine::s_transform_setrot(lua_State *L)
+    int l_transform_setrot(lua_State *L)
     {
         if(!lua_argcount(L, 2)) return 0;
 
@@ -104,6 +105,25 @@ namespace myth
         m3d::quat *b = (m3d::quat*)ud;
 
         a->rot = *b;
+
+        return 0;
+    }
+
+    int l_transform_translate(lua_State *L)
+    {
+        if(!lua_argcount(L, 2)) return 0;
+
+        void *ud = luaL_checkudata(L, 1, "Myth.transform");
+        luaL_argcheck(L, ud != NULL, 1, "`transform' expected");
+
+        Transform *a = *(Transform**)ud;
+
+        ud = luaL_checkudata(L, 2, "Myth.vec3");
+        luaL_argcheck(L, ud != NULL, 2, "`vec3' expected");
+
+        m3d::vec3 *b = (m3d::vec3*)ud;
+
+        a->pos += *b;
 
         return 0;
     }

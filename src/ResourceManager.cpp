@@ -25,8 +25,21 @@ namespace myth
         shd.name = "debug_wire_shader";
         loadShader(shd);
 
+        shd.v_filepath = "res/shaders/debugmesh.vert";
+        shd.f_filepath = "res/shaders/debugmesh.frag";
+        shd.name = "debugmesh_shader";
+        loadShader(shd);
+
         mtd.filepath = "res/materials/wireframe.mat";
         mtd.name = "debug_wire_mat";
+        loadMaterial(mtd);
+
+        mtd.filepath = "res/materials/debugmesh.mat";
+        mtd.name = "debugmesh_mat";
+        loadMaterial(mtd);
+
+        mtd.filepath = "res/materials/debugmesh_lines.mat";
+        mtd.name = "debugmesh_lines_mat";
         loadMaterial(mtd);
     }
 
@@ -150,6 +163,10 @@ namespace myth
                     {
                         u_type = UniformType::ModelMat;
                     }
+                    else if(data_split[1].compare("CamPos") == 0)
+                    {
+                        u_type = UniformType::CamPos;
+                    }
 
                     res.setUniformAs(getShaderUniformLocation(shader_index, data_split[0].c_str()), u_type);
                 }
@@ -200,10 +217,50 @@ namespace myth
                     {
                         res.drawMode = dgn::DrawMode::Lines;
                     }
+                    else if(data_split[0].compare("linestrip") == 0)
+                    {
+                        res.drawMode = dgn::DrawMode::LineStrip;
+                    }
+                    else if(data_split[0].compare("lineloop") == 0)
+                    {
+                        res.drawMode = dgn::DrawMode::LineLoop;
+                    }
                 }
                 else
                 {
-                    printf("Too few parameters for uniformi in material: %s\n", data.filepath.c_str());
+                    printf("Too few parameters for drawmode in material: %s\n", data.filepath.c_str());
+                }
+            }
+            else if(fun.compare("depthtest") == 0)
+            {
+                if(data_split.size() > 0)
+                {
+                    if(data_split[0].compare("always") == 0)
+                    {
+                        res.depthTest = dgn::DepthTest::Always;
+                    }
+                    else if(data_split[0].compare("lequal") == 0)
+                    {
+                        res.depthTest = dgn::DepthTest::LEqual;
+                    }
+                }
+                else
+                {
+                    printf("Too few parameters for depthtest in material: %s\n", data.filepath.c_str());
+                }
+            }
+            else if(fun.compare("cull") == 0)
+            {
+                if(data_split.size() > 0)
+                {
+                    if(data_split[0].compare("none") == 0)
+                    {
+                        res.cullFace = false;
+                    }
+                }
+                else
+                {
+                    printf("Too few parameters for depthtest in material: %s\n", data.filepath.c_str());
                 }
             }
             else
@@ -220,6 +277,25 @@ namespace myth
         m_index_map[data.name] = index;
 
         return index;
+    }
+
+    unsigned ResourceManager::createModel(const std::vector<float>& vertices, const std::vector<unsigned> indices, const std::string& name)
+    {
+        dgn::Mesh m;
+        m.createFromData(vertices, indices);
+        m.setVertexSize(3);
+        m.addVertexAttrib(0, 3);
+        m.complete();
+
+        dgn::Model res;
+        res.push_back(m);
+        m_models.push_back(res);
+
+        unsigned index = m_models.size();
+        m_index_map[name] = index;
+
+        return index;
+
     }
 
     unsigned ResourceManager::addMaterial(const Material& material, const std::string& name)

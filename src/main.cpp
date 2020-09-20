@@ -1,12 +1,12 @@
 #include "CoreEngine.h"
 
-#define WINDOW_WIDTH 960
-#define WINDOW_HEIGHT 520
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
 
-#include "ScriptEngine.h"
-
-//TODO: increase functionality of scriptable physics pipeline
 //TODO: clean up scene and resource loading cpp file
+//TODO: gui rendering: text, panels
+//TODO: editor
+//TODO: clean up script engine
 
 int main(int argc, char *argv[])
 {

@@ -19,11 +19,11 @@ function Ball:update()
 	local sphere = e:getSphere()
 	local aabb = e:getAABB()
 
-	sphere:setPos(Vec3.new(math.sin(Myth.frame / 60), 3.0, 0.0))
-	sphere:setRadius(math.abs(math.cos(Myth.frame / 40)) + 0.5)
+	--sphere:setPos(Vec3.new(math.sin(Myth.frame / 60), 3.0, 0.0))
+	--sphere:setRadius(math.abs(math.cos(Myth.frame / 40)) + 0.5)
 	
-	aabb:setPos(Vec3.new(0.0, 0.0, math.sin(Myth.frame / 60) * 0.5))
-	aabb:setExtents(Vec3.new(math.abs(math.cos(Myth.frame / 120))))
+	--aabb:setPos(Vec3.new(0.0, 0.0, math.sin(Myth.frame / 60) * 0.5))
+	--aabb:setExtents(Vec3.new(math.abs(math.cos(Myth.frame / 120))))
 
 	self.rot = self.rot + Myth.delta
 	

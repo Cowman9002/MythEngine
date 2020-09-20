@@ -18,6 +18,7 @@ namespace myth
         virtual void onAdd() override;
         virtual void start() override;
         virtual void update() override;
+        virtual void fixedUpdate() override;
     };
 }
 

@@ -1,0 +1,5 @@
+shader:debug_wire_shader
+uniformc:uMVP;MVPMat
+uniformv3:uColor;0.5;1.0;1.0
+drawmode:lines
+depthtest:lequal

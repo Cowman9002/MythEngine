@@ -11,8 +11,10 @@ namespace myth
     {
         MeshRenderer,
         Script,
+        RigidBody,
         SphereCollider,
         AABBCollider,
+        MeshCollider,
         Size
     };
 
