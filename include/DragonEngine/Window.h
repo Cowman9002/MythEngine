@@ -53,6 +53,8 @@ namespace dgn
         unsigned long getFrameCount();
         double getTime();
 
+        GLFWwindow *getNativeWindow();
+
         Input& getInput();
         Renderer& getRenderer();
 

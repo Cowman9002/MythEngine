@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Material.h"
+#include "Font.h"
 #include "Transform.h"
 
 #include <DragonEngine/Camera.h>
@@ -37,5 +38,7 @@ namespace myth
         void add(const RenderObject& ro);
 
         void drawAll();
+
+        void drawText(std::string text, Font *font, m3d::vec3 position);
     };
 }

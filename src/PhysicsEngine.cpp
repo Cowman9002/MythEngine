@@ -6,8 +6,6 @@
 #include "RenderingEngine.h"
 #include "ResourceManager.h"
 
-#include "components/MeshCollider.h"
-
 #include <TigerEngine/Sphere.h>
 #include <TigerEngine/AABB.h>
 #include <TigerEngine/Triangle.h>

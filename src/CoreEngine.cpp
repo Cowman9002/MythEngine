@@ -20,10 +20,9 @@ namespace myth
         m_window.setVsync(dgn::VsyncMode::None);
         m_window.makeCurrent();
 
-        if(!m_render.initialize(&m_window.getRenderer(), &m_resources))
-        {
-            return false;
-        }
+        if(!m_resources.initialize()) return false;
+
+        if(!m_render.initialize(&m_window.getRenderer(), &m_resources)) return false;
 
         m_render.getCamera()->width = width;
         m_render.getCamera()->height = height;
@@ -43,7 +42,7 @@ namespace myth
     {
         m_scene_graph.dispose();
         m_script_engine.terminate();
-        m_resources.dispose();
+        m_resources.terminate();
         m_window.terminate();
     }
 
@@ -56,6 +55,12 @@ namespace myth
         m_resources.loadDebugObjects();
 
         m_scene_loader.loadResources("res/scenes/simple.res");
+
+        FontData data;
+        data.filepath = "res/fonts/aleo/Aleo-Regular.otf";
+        data.name = "Aleo_Regular_font";
+        data.font_size = 50;
+        m_resources.loadFont(data);
 
         const char* error;
         while((error = dgn::getErrorString()) != nullptr)
@@ -92,7 +97,6 @@ namespace myth
             delta = now - last;
             last = now;
 
-
             m_script_engine.setNamespaceValue("Myth", "frame", m_window.getFrameCount());
             m_script_engine.setNamespaceValue("Myth", "delta", delta);
 
@@ -110,6 +114,9 @@ namespace myth
             m_physics.render(m_render, m_resources);
 
             m_render.drawAll();
+
+            m_render.drawText("Hello Text!", m_resources.getFont(m_resources.getIndex("Aleo_Regular_font")), m3d::vec3(50.0, 300.0f, 0.0f));
+
             m_window.swapBuffers();
         }
     }

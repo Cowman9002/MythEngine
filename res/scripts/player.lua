@@ -35,7 +35,7 @@ function Player:update()
 	end
 
 	if Input.getControllerButton(0, Input.ControllerSouth) and not button_down then
-		self.body:setVelocity(self.body:getVelocity():add(Vec3.new(0.0, 5.0, 0.0)))
+		self.body:setVelocity(Vec3.new(self.body:getVelocity():getx(), 5.0, self.body:getVelocity():getz()))
 		button_down = true
 	end
 

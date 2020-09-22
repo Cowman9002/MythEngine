@@ -1,7 +1,9 @@
 #include "CoreEngine.h"
 
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
+#define WINDOW_WIDTH 1080
+#define WINDOW_HEIGHT 560
+
+#include <iostream>
 
 //TODO: clean up scene and resource loading cpp file
 //TODO: gui rendering: text, panels

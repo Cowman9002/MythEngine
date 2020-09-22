@@ -3,6 +3,10 @@
 #include <DragonEngine/Texture.h>
 #include <DragonEngine/Shader.h>
 #include "Material.h"
+#include "Font.h"
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #include <vector>
 #include <unordered_map>
@@ -40,6 +44,13 @@ namespace myth
         std::string name = "";
     };
 
+    struct FontData
+    {
+        std::string filepath = "";
+        unsigned font_size = 12;
+        std::string name = "";
+    };
+
     class ResourceManager
     {
     private:
@@ -47,9 +58,15 @@ namespace myth
         std::vector<dgn::Texture> m_textures;
         std::vector<dgn::Shader> m_shaders;
         std::vector<Material> m_materials;
+        std::vector<Font> m_fonts;
 
         std::unordered_map<std::string, unsigned> m_index_map;
+
+        FT_Library ft_lib;
     public:
+
+        bool initialize();
+        void terminate();
 
         void loadDebugObjects();
 
@@ -57,21 +74,21 @@ namespace myth
         unsigned loadTexture(const TextureData& data);
         unsigned loadShader(const ShaderData& data);
         unsigned loadMaterial(const MaterialData& data);
+        unsigned loadFont(const FontData& data);
 
-        unsigned createModel(const std::vector<float>& vertices, const std::vector<unsigned> indices, const std::string& name);
-
+        unsigned addModel(const dgn::Model& Model, const std::string& name);
+        unsigned addTexture(const dgn::Texture& texture, const std::string& name);
         unsigned addMaterial(const Material& material, const std::string& name);
 
         dgn::Model *getModel(const unsigned& index);
         dgn::Texture *getTexture(const unsigned& index);
         dgn::Shader *getShader(const unsigned& index);
         Material *getMaterial(const unsigned& index);
+        Font *getFont(const unsigned& index);
 
         unsigned getIndex(const std::string& name) const;
 
         int getShaderUniformLocation(const unsigned& index, const char *name);
-
-        void dispose();
     };
 
 }

@@ -39,6 +39,7 @@
 			<Add library="TigerEngine" />
 			<Add library="m3d" />
 			<Add library="lua54" />
+			<Add library="freetype" />
 			<Add library="assimp.dll" />
 			<Add library="glfw3" />
 			<Add library="gdi32" />
@@ -49,6 +50,7 @@
 		<Unit filename="src/CoreEngine.h" />
 		<Unit filename="src/EntityComponent.cpp" />
 		<Unit filename="src/EntityComponent.h" />
+		<Unit filename="src/Font.h" />
 		<Unit filename="src/Material.cpp" />
 		<Unit filename="src/Material.h" />
 		<Unit filename="src/PhysicsEngine.cpp" />
@@ -67,8 +69,6 @@
 		<Unit filename="src/components/AABBCollider.cpp" />
 		<Unit filename="src/components/AABBCollider.h" />
 		<Unit filename="src/components/CollisionComponent.h" />
-		<Unit filename="src/components/MeshCollider.cpp" />
-		<Unit filename="src/components/MeshCollider.h" />
 		<Unit filename="src/components/MeshRenderer.cpp" />
 		<Unit filename="src/components/MeshRenderer.h" />
 		<Unit filename="src/components/RigidBody.cpp" />

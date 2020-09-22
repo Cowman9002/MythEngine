@@ -33,7 +33,8 @@ namespace dgn
         RGBA32F    = 0x8814,
         SRGB       = 0x8C40,
         SRGBA      = 0x8C42,
-        Depth      = 0x1902,
+        Red        = 0x1903,
+        Depth      = 0x1902
     };
 
     enum class TextureData
@@ -48,6 +49,14 @@ namespace dgn
         Texture2D = 0x0DE1,
         Texture3D = 0x806F,
         TextureCube = 0x8513
+    };
+
+    enum class TextureByteAlignment
+    {
+        Byte        = 1,
+        EvenByte    = 2,
+        Word        = 4,
+        DoubleWord  = 8
     };
 
     enum class CubemapFace
@@ -72,6 +81,9 @@ namespace dgn
     public:
         Texture();
         void dispose();
+
+        // Call before creating a texture, reset after
+        static void setUnpackAlignment(TextureByteAlignment alignment = TextureByteAlignment::Word);
 
         //////////////////////////////////////////////
         //               Texture 1D                 //
